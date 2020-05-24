@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 import urllib.request as ul
 import xmltodict
 import json
@@ -9,19 +10,20 @@ from urllib.parse import urlencode, unquote, quote_plus
 import urllib
 import requests
 
+movie_rank_service_key = requests.utils.unquote('c0a4510afa510bfe1e4fd885097ad953')
 
-ServiceKey = 'ThtNwocpn%2FHryqtYMOFgt9hVYGst0U%2Fk5JRdSPLODsXctdvMDEx9eob%2FiwjafVsIzR4Rsla36FRt6rI46rXwsA%3D%3D'
-url = 'http://openapi.seoul.go.kr:8088/sample/xml/movieTheatersBizInfo/1/5/'
-api_key_decode = unquote(url)
-params = '&pageNO=1&numOfRows=10&spclAdmTyCd=A0'
-queryParams = '?' + urlencode(
+movie_rank_url ='http://www.kobis.or.kr/kobisopenapi/webservice/rest/boxoffice/searchDailyBoxOfficeList.xml'
+movie_rank_Params = '?' + urlencode(
     {
-        quote_plus('serviceKey'): api_key_decode,
-        quote_plus('pageNo'): 1,
-        quote_plus('numOfRows') : 10,
+        quote_plus('key'): movie_rank_service_key, # 서비스키
+        quote_plus('targetDt'): 20200523, # 조회 날짜
+        quote_plus('itemPerPage') : 10, # 페이지 수
+        quote_plus('repNationCd'): '', # K: 한국영화 조회 F:외국영화 default:전체
+        quote_plus('wideAreaCd'): '' #“0105000000” 로서 조회된 지역코드입니다. (default : 전체)
     }
 )
-request = urllib.request.Request(api_key_decode)
+
+request = urllib.request.Request(movie_rank_url+movie_rank_Params)
 
 response_body = urlopen(request).read()
 response = urllib.request.urlopen(request)
