@@ -1,6 +1,6 @@
 from tkinter import *
 from tkinter import font
-from Search import *
+from ReadFile import *
 import tkinter.messagebox
 
 DataList = []
@@ -10,12 +10,18 @@ class GUI:
     def __init__(self):
         self.window = Tk()
         self.window.geometry("800x800")
+        self.InitTopText()
+        self.InitSearchListBox()
+        self.InitInputLabel()
+        self.InitSearchButton()
+        self.InitRenderText()
+        self.InputLabel
 
     def InitTopText(self):
         TempFont = font.Font(self.window, size=20, weight='bold', family='Consolas')
-        MainText = Label(self.window, font=TempFont, text="[서울시 영화관 검색 App]")
-        MainText.pack()
-        MainText.place(x=250)
+        self.MainText = Label(self.window, font=TempFont, text="[서울시 영화관 검색 App]")
+        self.MainText.pack()
+        self.MainText.place(x=250)
 
     def InitSearchListBox(self):
         global SearchListBox
@@ -35,74 +41,80 @@ class GUI:
         ListBoxScrollbar.config(command=SearchListBox.yview)
 
     def InitInputLabel(self):
-        global InputLabel
         TempFont = font.Font(self.window, size=15, weight='bold', family='Consolas')
-        InputLabel = Entry(self.window, font=TempFont, width=22, borderwidth=12, relief='ridge')
-        InputLabel.pack()
-        InputLabel.place(x=180, y=50)
+        self.InputLabel = Entry(self.window, font=TempFont, width=22, borderwidth=12, relief='ridge')
+        self.InputLabel.pack()
+        self.InputLabel.place(x=180, y=50)
 
     def InitSearchButton(self):
-        p = PhotoImage(file="resource/gmail-icon.png")
         TempFont = font.Font(self.window, size=12, weight='bold', family='Consolas')
-        SearchButton = Button(self.window, font=TempFont, text="검색", command=SearchButtonAction)
+        SearchButton = Button(self.window, font=TempFont, text="검색", command=self.SearchButtonAction)
         SearchButton.pack()
         SearchButton.place(x=480, y=52)
 
     def InitMailButton(self):
         TempFont = font.Font(self.window, size=12, weight='bold', family='Consolas')
-        SearchButton = Button(self.window, font=TempFont, text="메일", command=SearchButtonAction)
+        SearchButton = Button(self.window, font=TempFont, text="메일")
         SearchButton.pack()
         SearchButton.place(x=520, y=52)
 
-    def ReturnMovieRankingText(self):
-        return movie_ranking_text
-
     def InitRenderText(self):
-        global movie_ranking_text
-        global movie_imformation_text
-        global movie_favorites_list_text
-
         RenderTextScrollbar = Scrollbar(self.window)
         RenderTextScrollbar.pack()
         RenderTextScrollbar.place(x=375, y=200)
 
         TempFont = font.Font(self.window, size=10, family='Consolas')
-        movie_ranking_text = Text(self.window, width=40, height=20, borderwidth=12, relief='ridge',
-                                  yscrollcommand=RenderTextScrollbar.set)
-        movie_ranking_text.pack()
-        movie_ranking_text.place(x=10, y=140)
-        RenderTextScrollbar.config(command=movie_ranking_text.yview)
-        RenderTextScrollbar.pack(side=RIGHT, fill=BOTH)
-        movie_ranking_text.configure(state='disabled')
 
-        movie_ranking_text = Text(self.window, width=40, height=20, borderwidth=12, relief='ridge',
-                                  yscrollcommand=RenderTextScrollbar.set)
-        movie_ranking_text.pack()
-        movie_ranking_text.place(x=400, y=140)
-        RenderTextScrollbar.config(command=movie_ranking_text.yview)
-        RenderTextScrollbar.pack(side=RIGHT, fill=BOTH)
-        movie_ranking_text.configure(state='disabled')
 
-        movie_imformation_text = Text(self.window, width=40, height=20, borderwidth=12, relief='ridge',
+#지도 그릴 텍스트
+        self.movie_ranking_text = Text(self.window, width=40, height=20, borderwidth=12, relief='ridge',
+                                  yscrollcommand=RenderTextScrollbar.set)
+        self.movie_ranking_text.pack()
+        self. movie_ranking_text.place(x=400, y=140)
+        RenderTextScrollbar.config(command=self.movie_ranking_text.yview)
+        RenderTextScrollbar.pack(side=RIGHT, fill=BOTH)
+        self.movie_ranking_text.configure(state='disabled')
+
+        # 영화 텍스트
+        self.movie_ranking_text = Text(self.window, width=40, height=20, borderwidth=12, relief='ridge',
+                                  yscrollcommand=RenderTextScrollbar.set)
+        self.movie_ranking_text.pack()
+        self.movie_ranking_text.place(x=10, y=140)
+        RenderTextScrollbar.config(command=self.movie_ranking_text.yview)
+        RenderTextScrollbar.pack(side=RIGHT, fill=BOTH)
+        self. movie_ranking_text.configure(state='disabled')
+
+
+        self.movie_imformation_text = Text(self.window, width=40, height=20, borderwidth=12, relief='ridge',
                                       yscrollcommand=RenderTextScrollbar.set)
-        movie_imformation_text.pack()
-        movie_imformation_text.place(x=10, y=450)
-        RenderTextScrollbar.config(command=movie_ranking_text.yview)
+        self. movie_imformation_text.pack()
+        self.movie_imformation_text.place(x=10, y=450)
+        RenderTextScrollbar.config(command=self.movie_ranking_text.yview)
         RenderTextScrollbar.pack(side=RIGHT, fill=BOTH)
-        movie_imformation_text.configure(state='disabled')
+        self.movie_imformation_text.configure(state='disabled')
 
-        movie_favorites_list_text = Text(self.window, width=40, height=20, borderwidth=12, relief='ridge',
+        self. movie_favorites_list_text = Text(self.window, width=40, height=20, borderwidth=12, relief='ridge',
                                          yscrollcommand=RenderTextScrollbar.set)
-        movie_favorites_list_text.pack()
-        movie_favorites_list_text.place(x=400, y=450)
-        RenderTextScrollbar.config(command=movie_ranking_text.yview)
+        self. movie_favorites_list_text.pack()
+        self.movie_favorites_list_text.place(x=400, y=450)
+        RenderTextScrollbar.config(command=self.movie_ranking_text.yview)
         RenderTextScrollbar.pack(side=RIGHT, fill=BOTH)
-        movie_favorites_list_text.configure(state='disabled')
+        self.movie_favorites_list_text.configure(state='disabled')
+
+    def SearchButtonAction(self):
+
+
+        movie_ranking = Movie().crawl_movie(int(self.InputLabel.get()))
+        self.movie_ranking_text.configure(state='normal')
+        for i in movie_ranking:
+            self.movie_ranking_text.insert(INSERT,(i['rank'], i['movieNm'], i['openDt'], i['audiAcc']))
+            self.movie_ranking_text.insert(INSERT, "\n")
+
+        pass
+
+    def SearchLibrary(self):
+        pass
 
     def RunGui(self):
-        self.InitTopText()
-        self.InitSearchListBox()
-        self.InitInputLabel()
-        self.InitSearchButton()
-        self.InitRenderText()
+
         self.window.mainloop()

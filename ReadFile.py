@@ -9,15 +9,13 @@ import requests
 import json
 from datetime import datetime ,timedelta
 
+
 # 출력 확인 완료
 class Movie():
-    def __init__(self):
-        pass
-
-    def crawl_movie(self):
+    def crawl_movie(self , date=datetime.today() - timedelta(1)):
         self.movie_rank_service_key = requests.utils.unquote('c0a4510afa510bfe1e4fd885097ad953')
         self.movie_rank_url = 'http://www.kobis.or.kr/kobisopenapi/webservice/rest/boxoffice/searchDailyBoxOfficeList.json'
-        self.now_defalut = datetime.today() - timedelta(1)
+        self.now_defalut = date
         self.movie_rank_Params = '?' + urlencode(
             {
                 quote_plus('key'): self.movie_rank_service_key,  # 서비스키
@@ -30,6 +28,7 @@ class Movie():
         request = urllib.request.Request(self.movie_rank_url + self.movie_rank_Params)
         response = urllib.request.urlopen(request)
         rescode = response.getcode()
+
         #잘돌아가나 확인용
         if rescode == 200:
             responseData = response.read()
