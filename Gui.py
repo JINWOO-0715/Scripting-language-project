@@ -6,16 +6,21 @@ import tkinter.messagebox
 DataList = []
 
 
+def callback(event):
+    print("clicked at", event.x, event.y)
+
 class GUI:
     def __init__(self):
         self.window = Tk()
         self.window.geometry("800x800")
+        self.window.bind("<Button-1>" , callback)
+
         self.InitTopText()
         self.InitSearchListBox()
         self.InitInputLabel()
         self.InitSearchButton()
-        self.InitRenderText()
-        self.InputLabel
+        self.InitMovieRankingText()
+
 
     def InitTopText(self):
         TempFont = font.Font(self.window, size=20, weight='bold', family='Consolas')
@@ -58,63 +63,50 @@ class GUI:
         SearchButton.pack()
         SearchButton.place(x=520, y=52)
 
-    def InitRenderText(self):
-        RenderTextScrollbar = Scrollbar(self.window)
-        RenderTextScrollbar.pack()
-        RenderTextScrollbar.place(x=375, y=200)
-
+    def InitMovieRankingText(self):
+        self.movie_ranking_text_scrollbar = Scrollbar(self.window)
+        self.movie_ranking_text_scrollbar.pack()
+        self.movie_ranking_text_scrollbar.place(x=200, y=20)
         TempFont = font.Font(self.window, size=10, family='Consolas')
-
-
-#지도 그릴 텍스트
-        self.movie_ranking_text = Text(self.window, width=40, height=20, borderwidth=12, relief='ridge',
-                                  yscrollcommand=RenderTextScrollbar.set)
-        self.movie_ranking_text.pack()
-        self. movie_ranking_text.place(x=400, y=140)
-        RenderTextScrollbar.config(command=self.movie_ranking_text.yview)
-        RenderTextScrollbar.pack(side=RIGHT, fill=BOTH)
-        self.movie_ranking_text.configure(state='disabled')
 
         # 영화 텍스트
         self.movie_ranking_text = Text(self.window, width=40, height=20, borderwidth=12, relief='ridge',
-                                  yscrollcommand=RenderTextScrollbar.set)
+                                  yscrollcommand= self.movie_ranking_text_scrollbar.set)
         self.movie_ranking_text.pack()
         self.movie_ranking_text.place(x=10, y=140)
-        RenderTextScrollbar.config(command=self.movie_ranking_text.yview)
-        RenderTextScrollbar.pack(side=RIGHT, fill=BOTH)
+        self.movie_ranking_text_scrollbar.config(command=self.movie_ranking_text.yview)
+        self.movie_ranking_text_scrollbar.pack(side=RIGHT, fill=BOTH)
         self. movie_ranking_text.configure(state='disabled')
 
 
-        self.movie_imformation_text = Text(self.window, width=40, height=20, borderwidth=12, relief='ridge',
-                                      yscrollcommand=RenderTextScrollbar.set)
-        self. movie_imformation_text.pack()
-        self.movie_imformation_text.place(x=10, y=450)
-        RenderTextScrollbar.config(command=self.movie_ranking_text.yview)
-        RenderTextScrollbar.pack(side=RIGHT, fill=BOTH)
-        self.movie_imformation_text.configure(state='disabled')
-
-        self. movie_favorites_list_text = Text(self.window, width=40, height=20, borderwidth=12, relief='ridge',
-                                         yscrollcommand=RenderTextScrollbar.set)
-        self. movie_favorites_list_text.pack()
-        self.movie_favorites_list_text.place(x=400, y=450)
-        RenderTextScrollbar.config(command=self.movie_ranking_text.yview)
-        RenderTextScrollbar.pack(side=RIGHT, fill=BOTH)
-        self.movie_favorites_list_text.configure(state='disabled')
-
-    def SearchButtonAction(self):
+        #self.movie_imformation_text = Text(self.window, width=40, height=20, borderwidth=12, relief='ridge')
+        #self. movie_favorites_list_text = Text(self.window, width=40, height=20, borderwidth=12, relief='ridge')
 
 
-        movie_ranking = Movie().crawl_movie(int(self.InputLabel.get()))
+    def SearchButtonAction(self):# 랭킹 출력함수
+        movie_ranking = Movie().crawl_movie()
         self.movie_ranking_text.configure(state='normal')
         for i in movie_ranking:
-            self.movie_ranking_text.insert(INSERT,(i['rank'], i['movieNm'], i['openDt'], i['audiAcc']))
+            self.movie_ranking_text.insert(INSERT,"[")
+            self.movie_ranking_text.insert(INSERT,i['rank']+"위")
+            self.movie_ranking_text.insert(INSERT, "] ")
+            self.movie_ranking_text.insert(INSERT, i['movieNm'] )
+            self.movie_ranking_text.insert(INSERT, " ")
             self.movie_ranking_text.insert(INSERT, "\n")
-
-        pass
+            self.movie_ranking_text.insert(INSERT, "개봉일: ")
+            self.movie_ranking_text.insert(INSERT, i['openDt'])
+            self.movie_ranking_text.insert(INSERT, " ")
+            self.movie_ranking_text.insert(INSERT, "누적 관람객: ")
+            self.movie_ranking_text.insert(INSERT, i['audiAcc'])
+            self.movie_ranking_text.insert(INSERT, "\n\n")
 
     def SearchLibrary(self):
         pass
 
+
     def RunGui(self):
 
+
         self.window.mainloop()
+
+
