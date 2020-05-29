@@ -14,12 +14,14 @@ class GUI:
         self.window = Tk()
         self.window.geometry("800x800")
         self.window.bind("<Button-1>" , callback)
+        self.movie_ranking = Movie().crawl_movie()
 
         self.InitTopText()
         self.InitSearchListBox()
         self.InitInputLabel()
         self.InitSearchButton()
         self.InitMovieRankingText()
+        self.InitMovieRankingListBox()
 
 
     def InitTopText(self):
@@ -63,6 +65,27 @@ class GUI:
         SearchButton.pack()
         SearchButton.place(x=520, y=52)
 
+    def InitMovieRankingListBox(self):
+        self.movie_ranking_list_box =None
+        self.movie_ranking_list_box_scrollbar = Scrollbar(self.window)
+        self.movie_ranking_list_box_scrollbar.pack()
+        self.movie_ranking_list_box_scrollbar.place(x=450, y=50)
+
+        TempFont = font.Font(self.window, size=15, weight='bold', family='Consolas')
+        self.movie_ranking_list_box = Listbox(self.window, font=TempFont, activestyle='none',
+                                width=25, height=10, borderwidth=12, relief='ridge')
+
+        self.movie_ranking_list_box.pack()
+        self.movie_ranking_list_box.place(x=400, y=140)
+        self.movie_ranking_list_box_scrollbar.config(command=self.movie_ranking_list_box.yview)
+        for i in self.movie_ranking:
+            self.movie_ranking_list_box.insert(10,"["+i['rank']+"위]" + i['movieNm'])
+
+    def find(self):
+        num =self.movie_ranking_list_box.curselection()
+        print(self.movie_ranking_list_box.get(num[0]))
+        
+
     def InitMovieRankingText(self):
         self.movie_ranking_text_scrollbar = Scrollbar(self.window)
         self.movie_ranking_text_scrollbar.pack()
@@ -79,14 +102,14 @@ class GUI:
         self. movie_ranking_text.configure(state='disabled')
 
 
+
         #self.movie_imformation_text = Text(self.window, width=40, height=20, borderwidth=12, relief='ridge')
         #self. movie_favorites_list_text = Text(self.window, width=40, height=20, borderwidth=12, relief='ridge')
 
 
     def SearchButtonAction(self):# 랭킹 출력함수
-        movie_ranking = Movie().crawl_movie()
         self.movie_ranking_text.configure(state='normal')
-        for i in movie_ranking:
+        for i in self.movie_ranking:
             self.movie_ranking_text.insert(INSERT,"[")
             self.movie_ranking_text.insert(INSERT,i['rank']+"위")
             self.movie_ranking_text.insert(INSERT, "] ")
@@ -99,14 +122,14 @@ class GUI:
             self.movie_ranking_text.insert(INSERT, "누적 관람객: ")
             self.movie_ranking_text.insert(INSERT, i['audiAcc'])
             self.movie_ranking_text.insert(INSERT, "\n\n")
+            self.find()
 
     def SearchLibrary(self):
         pass
 
 
     def RunGui(self):
-
-
         self.window.mainloop()
+
 
 
