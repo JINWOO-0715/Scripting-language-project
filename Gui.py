@@ -54,10 +54,13 @@ class GUI:
         SearchButton.pack()
         SearchButton.place(x=520, y=52)
 
+    def ReturnMovieRankingText(self):
+        return movie_ranking_text
+
     def InitRenderText(self):
         global movie_ranking_text
         global movie_imformation_text
-        global movei_favorites_list_text
+        global movie_favorites_list_text
 
         RenderTextScrollbar = Scrollbar(self.window)
         RenderTextScrollbar.pack()
@@ -88,13 +91,13 @@ class GUI:
         RenderTextScrollbar.pack(side=RIGHT, fill=BOTH)
         movie_imformation_text.configure(state='disabled')
 
-        movei_favorites_list_text = Text(self.window, width=40, height=20, borderwidth=12, relief='ridge',
+        movie_favorites_list_text = Text(self.window, width=40, height=20, borderwidth=12, relief='ridge',
                                          yscrollcommand=RenderTextScrollbar.set)
-        movei_favorites_list_text.pack()
-        movei_favorites_list_text.place(x=400, y=450)
+        movie_favorites_list_text.pack()
+        movie_favorites_list_text.place(x=400, y=450)
         RenderTextScrollbar.config(command=movie_ranking_text.yview)
         RenderTextScrollbar.pack(side=RIGHT, fill=BOTH)
-        movei_favorites_list_text.configure(state='disabled')
+        movie_favorites_list_text.configure(state='disabled')
 
     def RunGui(self):
         self.InitTopText()
