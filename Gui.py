@@ -2,12 +2,14 @@ from tkinter import *
 from tkinter import font
 from ReadFile import *
 import tkinter.messagebox
+import Gmail
 
 DataList = []
 
 
 def callback(event):
     print("clicked at", event.x, event.y)
+
 
 class GUI:
     def __init__(self):
@@ -22,6 +24,10 @@ class GUI:
         self.InitSearchButton()
         self.InitMovieRankingText()
         self.InitMovieRankingListBox()
+
+        # gmail 추가
+        self.InitMailButton()
+        self.InitInputGmail()
 
 
     def InitTopText(self):
@@ -58,12 +64,6 @@ class GUI:
         SearchButton = Button(self.window, font=TempFont, text="검색", command=self.SearchButtonAction)
         SearchButton.pack()
         SearchButton.place(x=480, y=52)
-
-    def InitMailButton(self):
-        TempFont = font.Font(self.window, size=12, weight='bold', family='Consolas')
-        SearchButton = Button(self.window, font=TempFont, text="메일")
-        SearchButton.pack()
-        SearchButton.place(x=520, y=52)
 
     def InitMovieRankingListBox(self):
         self.movie_ranking_list_box =None
@@ -115,8 +115,8 @@ class GUI:
         self.movie_imformation_text.insert(INSERT, "누적 관람객: ")
         self.movie_imformation_text.insert(INSERT, self.movie_ranking[i]['audiAcc'])
         self.movie_imformation_text.insert(INSERT, "\n")
-        self.movie_imformation_text.insert(INSERT, "d: ")
-        self.movie_imformation_text.insert(INSERT, self.movie_ranking[i]['audiAcc'])
+        self.movie_imformation_text.insert(INSERT, "당일 관람객: ")
+        self.movie_imformation_text.insert(INSERT, self.movie_ranking[i]['audiCnt'])
 
     def SearchLibrary(self):
         pass
@@ -125,5 +125,22 @@ class GUI:
     def RunGui(self):
         self.window.mainloop()
 
+
+    def InitMailButton(self):
+        TempFont = font.Font(self.window, size=12, weight='bold', family='Consolas')
+        SearchButton = Button(self.window, font=TempFont, text="메일", command=self.SendMail)
+        SearchButton.pack()
+        SearchButton.place(x=520, y=52)
+
+    def InitInputGmail(self):
+        self.address = StringVar()
+        TempFont = font.Font(self.window, size=15, weight='bold', family='Consolas')
+        GmailLabel = Entry(self.window, textvariable=self.address, font=TempFont, width=14, borderwidth=12, relief='ridge')
+        GmailLabel.pack()
+        GmailLabel.place(x=580, y=50)
+
+    def SendMail(self):
+        address = str(self.address.get())
+        Gmail.SendMail(address, self.movie_ranking)
 
 
