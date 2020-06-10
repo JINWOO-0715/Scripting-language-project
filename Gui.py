@@ -4,6 +4,11 @@ from ReadFile import *
 import tkinter.messagebox
 import Gmail
 from Naver_Crowling import *
+from pandas import DataFrame
+import matplotlib.pyplot as plt
+
+import tkinter.ttk #콤보박스 나중을 위함
+
 
 DataList = []
 
@@ -26,7 +31,7 @@ class GUI:
         self.InitMovieRankingText()
         self.InitMovieRankingListBox()
         self.InitMovieStorySearchButton()
-
+        self.SearchLibrary()
         # gmail 추가
         self.InitMailButton()
         self.InitInputGmail()
@@ -69,7 +74,7 @@ class GUI:
 
     def InitMovieStorySearchButton(self):
         TempFont = font.Font(self.window, size=12, weight='bold', family='Consolas')
-        MovieStorySearchButton = Button(self.window, font=TempFont, text="검색", command=self.SearchMovieStory)
+        MovieStorySearchButton = Button(self.window, font=TempFont, text="상세검색", command=self.SearchMovieStory)
         MovieStorySearchButton.pack()
         MovieStorySearchButton.place(x=120, y=410)
 
@@ -103,12 +108,9 @@ class GUI:
         self.movie_information_scrollbar.pack(side=RIGHT, fill=BOTH)
         self. movie_imformation_text.configure(state='disabled')
 
-        #self. movie_favorites_list_text = Text(self.window, width=40, height=20, borderwidth=12, relief='ridge')
-
     def find(self):
         num =self.movie_ranking_list_box.curselection()
         return num[0]
-
 
     def SearchButtonAction(self):# 랭킹 출력함수
         global SearchListBox
@@ -122,7 +124,6 @@ class GUI:
             pass  # SearchMarket()
         elif iSearchIndex == 3:
             pass  # SearchCultural()
-
 
     def SearchMovieStory(self):
         self.movie_imformation_text.configure(state='normal')
@@ -151,18 +152,23 @@ class GUI:
         self.movie_imformation_text.insert(INSERT, "줄거리 : %s" %Mstory)
 
 
-
     def SearchDate(self):
         s = self.InputLabel.get()
         print(s)
         self.movie_ranking = Movie().crawl_movie(s)
         self.InitMovieRankingListBox()
 
-
-
-
     def SearchLibrary(self):
-        pass
+        plt.rcParams['font.family'] ='Consolas'
+        plt.rcParams['axes.unicode_minus']=False
+        df = DataFrame(self.movie_ranking)
+        df =df.filter(items=['movieNm' , 'audiCnt'])
+        print(df)
+        plt.title("메롱쓰")
+        plt.xlabel('movieNm')
+        plt.ylabel('audiCnt')
+        plt.bar(df['movieNm'],df['audiCnt'])
+        plt.show()
 
 
     def RunGui(self):
