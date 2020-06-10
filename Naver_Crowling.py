@@ -37,7 +37,7 @@ def searchByTitle(title):
         print("Error Code:" + rescode)
 
 #제목 부제목 개봉일 배우 링크 유저평점 이건 네이버 영화 정보 찾기
-def findItemByInput(items):
+def findItemByInput(items ):
     for index, item in enumerate(items):
         navertitle = cleanhtml(item['title'])
         naversubtitle = cleanhtml(item['subtitle'])
@@ -45,8 +45,6 @@ def findItemByInput(items):
         naveractor = cleanhtml(item['actor'])
         naverlink = cleanhtml(item['link'])
         naveruserScore = cleanhtml(item['userRating'])
-
-
         navertitle1 = navertitle.replace(" ", "")
         navertitle1 = navertitle1.replace("-", ",")
         navertitle1 = navertitle1.replace(":", ",")
@@ -55,8 +53,6 @@ def findItemByInput(items):
         #spScore = getSpecialScore(naverlink)
         #spStory = getStroy(naverlink)
         spMStory = getMStroy(naverlink)
-        print(spMStory)
-        return  spMStory
         # 네이버가 다루는 영화 고유 ID를 얻어 옵니다다
         #naverid = re.split("code=", naverlink)[1]
 
@@ -65,8 +61,7 @@ def findItemByInput(items):
         #    response = requests.get(item['image'])
         #    img = Image.open(BytesIO(response.content))
         #    img.show()
-
-        print(index, navertitle ) #naversubtitle,naverpubdate ,naveractor,naveruserScore, spScore)
+        return spMStory
 
 
 def getInfoFromNaver(searchTitle):
@@ -124,8 +119,6 @@ def getMStroy(URL):
             content_infos.append(temp)
     return content_infos
 
-
-getInfoFromNaver("쇼맨")
 
 
 

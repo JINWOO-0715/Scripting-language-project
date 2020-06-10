@@ -64,7 +64,7 @@ class GUI:
         TempFont = font.Font(self.window, size=12, weight='bold', family='Consolas')
         SearchButton = Button(self.window, font=TempFont, text="검색", command=self.SearchButtonAction)
         SearchButton.pack()
-        SearchButton.place(x=480, y=52)
+        SearchButton.place(x=470, y=52)
 
     def InitMovieRankingListBox(self):
         self.movie_ranking_list_box =None
@@ -86,10 +86,10 @@ class GUI:
         self.movie_information_scrollbar = Scrollbar(self.window)
         self.movie_information_scrollbar.pack()
         self.movie_information_scrollbar.place(x=500, y=450)
-        TempFont = font.Font(self.window, size=10, family='Consolas')
+        TempFont = font.Font(self.window, size=13, weight='bold',family='Consolas')
         # 영화 텍스트
-        self.movie_imformation_text = Text(self.window, width=40, height=20, borderwidth=12, relief='ridge',
-                                           yscrollcommand= self.movie_information_scrollbar.set)
+        self.movie_imformation_text = Text(self.window, width=30, height=15, borderwidth=12, relief='ridge',
+                                           yscrollcommand= self.movie_information_scrollbar.set, font =TempFont)
         self.movie_imformation_text.pack()
         self.movie_imformation_text.place(x=10, y=450)
         self.movie_information_scrollbar.config(command=self.movie_imformation_text.yview)
@@ -104,22 +104,42 @@ class GUI:
 
 
     def SearchButtonAction(self):# 랭킹 출력함수
-        self.movie_imformation_text.configure(state='normal')
-        i =int( self.find())
+        global SearchListBox
+        iSearchIndex = SearchListBox.curselection()[0]
+        if iSearchIndex == 0:
+            self.SearchDate()
+        elif iSearchIndex == 1:
+            pass  # SearchGoodFoodService()
+        elif iSearchIndex == 2:
+            pass  # SearchMarket()
+        elif iSearchIndex == 3:
+            pass  # SearchCultural()
 
-        self.movie_imformation_text.delete('1.0',END)
+
+
+    def SearchDate(self):
+        self.movie_ranking = Movie().crawl_movie()
+        self.movie_imformation_text.configure(state='normal')
+        i = int(self.find())
+        self.movie_imformation_text.delete('1.0', END)
         self.movie_imformation_text.insert(INSERT, self.movie_ranking[i]['movieNm'])
-        self.movie_imformation_text.insert(INSERT, ": ")
         self.movie_imformation_text.insert(INSERT, "\n")
         self.movie_imformation_text.insert(INSERT, "개봉일: ")
         self.movie_imformation_text.insert(INSERT, self.movie_ranking[i]['movieCd'])
         self.movie_imformation_text.insert(INSERT, " ")
         self.movie_imformation_text.insert(INSERT, "\n")
         self.movie_imformation_text.insert(INSERT, "누적 관람객: ")
-        self.movie_imformation_text.insert(INSERT, self.movie_ranking[i]['audiAcc'])
+        self.movie_imformation_text.insert(INSERT, self.movie_ranking[i]['audiAcc'] + "명")
         self.movie_imformation_text.insert(INSERT, "\n")
         self.movie_imformation_text.insert(INSERT, "당일 관람객: ")
-        self.movie_imformation_text.insert(INSERT, self.movie_ranking[i]['audiCnt'])
+        self.movie_imformation_text.insert(INSERT, self.movie_ranking[i]['audiCnt'] + "명")
+        self.movie_imformation_text.insert(INSERT, "\n")
+        self.movie_imformation_text.insert(INSERT, "줄거리: ")
+        items = searchByTitle(self.movie_ranking[i]['movieNm'])
+        s = findItemByInput(items)
+        self.movie_imformation_text.insert(INSERT, "%s" % s)
+
+
 
 
     def SearchLibrary(self):

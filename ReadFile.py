@@ -12,14 +12,14 @@ from datetime import datetime ,timedelta
 
 # 출력 확인 완료
 class Movie():
-    def crawl_movie(self , date=datetime.today() - timedelta(1)):
+    def crawl_movie(self , date=(datetime.today() - timedelta(1)).strftime('%Y%m%d')):
         self.movie_rank_service_key = requests.utils.unquote('c0a4510afa510bfe1e4fd885097ad953')
         self.movie_rank_url = 'http://www.kobis.or.kr/kobisopenapi/webservice/rest/boxoffice/searchDailyBoxOfficeList.json'
         self.now_defalut = date
         self.movie_rank_Params = '?' + urlencode(
             {
                 quote_plus('key'): self.movie_rank_service_key,  # 서비스키
-                quote_plus('targetDt'):self.now_defalut.strftime('%Y%m%d'),  # 조회 날짜
+                quote_plus('targetDt'):self.now_defalut,  # 조회 날짜
                 quote_plus('itemPerPage'): 10,  # 페이지 수
                 quote_plus('repNationCd'): '',  # K: 한국영화 조회 F:외국영화 default:전체
                 quote_plus('wideAreaCd'): ''  # “0105000000” 로서 조회된 지역코드입니다. (default : 전체)
