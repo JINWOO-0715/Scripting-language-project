@@ -1,3 +1,4 @@
+
 from tkinter import *
 from tkinter import font
 from ReadFile import *
@@ -6,6 +7,12 @@ import Gmail
 from Naver_Crowling import *
 from pandas import DataFrame
 import matplotlib.pyplot as plt
+
+
+from matplotlib import font_manager
+
+
+
 
 import tkinter.ttk #콤보박스 나중을 위함
 
@@ -31,7 +38,7 @@ class GUI:
         self.InitMovieRankingText()
         self.InitMovieRankingListBox()
         self.InitMovieStorySearchButton()
-        self.SearchLibrary()
+        self.MakeGraph()
         # gmail 추가
         self.InitMailButton()
         self.InitInputGmail()
@@ -158,9 +165,12 @@ class GUI:
         self.movie_ranking = Movie().crawl_movie(s)
         self.InitMovieRankingListBox()
 
-    def SearchLibrary(self):
-        plt.rcParams['font.family'] ='Consolas'
-        plt.rcParams['axes.unicode_minus']=False
+    def MakeGraph(self):
+        plt.rc('font', family='Malgun Gothic')
+        plt.rc('axes', unicode_minus=False)
+        plt.rcParams["font.size"] = 10
+        plt.rcParams['xtick.labelsize'] = 10.
+        plt.rcParams['ytick.labelsize'] = 10.
         df = DataFrame(self.movie_ranking)
         df =df.filter(items=['movieNm' , 'audiCnt'])
         print(df)
