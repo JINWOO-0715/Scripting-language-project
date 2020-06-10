@@ -36,7 +36,7 @@ class GUI:
         self.MainText = Label(self.window, font=TempFont, text="[서울시 영화관 검색 App]")
         self.MainText.pack()
         self.MainText.place(x=250)
-# 찾기 버튼
+# 리스트 박스 ( 영화 차트 검색 영화관)
     def InitSearchListBox(self):
         global SearchListBox
         ListBoxScrollbar = Scrollbar(self.window)
@@ -87,7 +87,7 @@ class GUI:
         self.movie_information_scrollbar.pack()
         self.movie_information_scrollbar.place(x=500, y=450)
         TempFont = font.Font(self.window, size=13, weight='bold',family='Consolas')
-        # 영화 텍스트
+        # 영화 랭킹 텍스트
         self.movie_imformation_text = Text(self.window, width=30, height=15, borderwidth=12, relief='ridge',
                                            yscrollcommand= self.movie_information_scrollbar.set, font =TempFont)
         self.movie_imformation_text.pack()
@@ -118,7 +118,10 @@ class GUI:
 
 
     def SearchDate(self):
-        self.movie_ranking = Movie().crawl_movie()
+        s = self.InputLabel.get()
+        print(s)
+        self.movie_ranking = Movie().crawl_movie(s)
+        self.InitMovieRankingListBox()
         self.movie_imformation_text.configure(state='normal')
         i = int(self.find())
         self.movie_imformation_text.delete('1.0', END)
@@ -138,6 +141,7 @@ class GUI:
         items = searchByTitle(self.movie_ranking[i]['movieNm'])
         s = findItemByInput(items)
         self.movie_imformation_text.insert(INSERT, "%s" % s)
+
 
 
 
