@@ -3,6 +3,7 @@ from tkinter import font
 from ReadFile import *
 import tkinter.messagebox
 import Gmail
+from Naver_Crowling import *
 
 DataList = []
 
@@ -29,13 +30,13 @@ class GUI:
         self.InitMailButton()
         self.InitInputGmail()
 
-
+#탑 텍스트 초기화
     def InitTopText(self):
         TempFont = font.Font(self.window, size=20, weight='bold', family='Consolas')
         self.MainText = Label(self.window, font=TempFont, text="[서울시 영화관 검색 App]")
         self.MainText.pack()
         self.MainText.place(x=250)
-
+# 찾기 버튼
     def InitSearchListBox(self):
         global SearchListBox
         ListBoxScrollbar = Scrollbar(self.window)
@@ -52,13 +53,13 @@ class GUI:
         SearchListBox.pack()
         SearchListBox.place(x=10, y=50)
         ListBoxScrollbar.config(command=SearchListBox.yview)
-
+# 검색어 입력라벨
     def InitInputLabel(self):
         TempFont = font.Font(self.window, size=15, weight='bold', family='Consolas')
         self.InputLabel = Entry(self.window, font=TempFont, width=22, borderwidth=12, relief='ridge')
         self.InputLabel.pack()
         self.InputLabel.place(x=180, y=50)
-
+#검색버튼 초기화
     def InitSearchButton(self):
         TempFont = font.Font(self.window, size=12, weight='bold', family='Consolas')
         SearchButton = Button(self.window, font=TempFont, text="검색", command=self.SearchButtonAction)
@@ -81,10 +82,6 @@ class GUI:
         for i in self.movie_ranking:
             self.movie_ranking_list_box.insert(10,"["+i['rank']+"위]" + i['movieNm'])
 
-    def find(self):
-        num =self.movie_ranking_list_box.curselection()
-        return num[0]
-
     def InitMovieRankingText(self):
         self.movie_information_scrollbar = Scrollbar(self.window)
         self.movie_information_scrollbar.pack()
@@ -101,15 +98,21 @@ class GUI:
 
         #self. movie_favorites_list_text = Text(self.window, width=40, height=20, borderwidth=12, relief='ridge')
 
+    def find(self):
+        num =self.movie_ranking_list_box.curselection()
+        return num[0]
+
 
     def SearchButtonAction(self):# 랭킹 출력함수
         self.movie_imformation_text.configure(state='normal')
         i =int( self.find())
+
+        self.movie_imformation_text.delete('1.0',END)
         self.movie_imformation_text.insert(INSERT, self.movie_ranking[i]['movieNm'])
         self.movie_imformation_text.insert(INSERT, ": ")
         self.movie_imformation_text.insert(INSERT, "\n")
         self.movie_imformation_text.insert(INSERT, "개봉일: ")
-        self.movie_imformation_text.insert(INSERT, self.movie_ranking[i]['openDt'])
+        self.movie_imformation_text.insert(INSERT, self.movie_ranking[i]['movieCd'])
         self.movie_imformation_text.insert(INSERT, " ")
         self.movie_imformation_text.insert(INSERT, "\n")
         self.movie_imformation_text.insert(INSERT, "누적 관람객: ")
@@ -117,6 +120,7 @@ class GUI:
         self.movie_imformation_text.insert(INSERT, "\n")
         self.movie_imformation_text.insert(INSERT, "당일 관람객: ")
         self.movie_imformation_text.insert(INSERT, self.movie_ranking[i]['audiCnt'])
+
 
     def SearchLibrary(self):
         pass

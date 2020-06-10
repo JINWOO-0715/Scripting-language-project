@@ -17,7 +17,7 @@ def cleanhtml(raw_html):
 
     return cleantext
 
-#네이버 영화 제목 찾기 (코드)
+#네이버 영화 제목 찾기
 def searchByTitle(title):
     myurl = 'https://openapi.naver.com/v1/search/movie.json?query=' + quote(title)
     request = urllib.request.Request(myurl)
@@ -55,8 +55,10 @@ def findItemByInput(items):
         #spScore = getSpecialScore(naverlink)
         #spStory = getStroy(naverlink)
         spMStory = getMStroy(naverlink)
+        print(spMStory)
+        return  spMStory
         # 네이버가 다루는 영화 고유 ID를 얻어 옵니다다
-        naverid = re.split("code=", naverlink)[1]
+        #naverid = re.split("code=", naverlink)[1]
 
         # 영화의 타이틀 이미지를 표시합니다
         # if (item['image'] != None and "http" in item['image']):
@@ -64,7 +66,7 @@ def findItemByInput(items):
         #    img = Image.open(BytesIO(response.content))
         #    img.show()
 
-        print(index, navertitle) #naversubtitle,naverpubdate ,naveractor,naveruserScore, spScore)
+        print(index, navertitle ) #naversubtitle,naverpubdate ,naveractor,naveruserScore, spScore)
 
 
 def getInfoFromNaver(searchTitle):
@@ -93,6 +95,7 @@ def getSpecialScore(URL):
         return float(scoreis)
     else:
         return 0.0
+#헤드 줄거리를 얻어옵니다.
 def getStroy(URL):
     soup = get_soup(URL)
     scorearea = soup.find_all('div', 'story_area')
@@ -104,6 +107,7 @@ def getStroy(URL):
     #     for i in main_story:
     #         i. newsoup.find('p').text
 
+#메인 줄거리를 얻어옵니다.
 def getMStroy(URL):
     soup = get_soup(URL)
     scorearea = soup.find_all('div', 'story_area')
@@ -118,13 +122,12 @@ def getMStroy(URL):
             temp = temp.replace('\r', '')
             temp = temp.replace('\xa0', '')
             content_infos.append(temp)
-    print(content_infos)
+    return content_infos
+
+
+getInfoFromNaver("쇼맨")
 
 
 
 
-    # if main_story != None:
-    #     for i in main_story:
-    #         i. newsoup.find('p').text
 
-getInfoFromNaver(u"언더워터")
