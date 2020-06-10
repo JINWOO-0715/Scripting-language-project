@@ -14,9 +14,10 @@ naver_client_secret = "BxD49l5brh"
 def cleanhtml(raw_html):
     cleanr = re.compile('<.*?>')
     cleantext = re.sub(cleanr, '', raw_html)
+
     return cleantext
 
-
+#네이버 영화 제목 찾기 (코드)
 def searchByTitle(title):
     myurl = 'https://openapi.naver.com/v1/search/movie.json?query=' + quote(title)
     request = urllib.request.Request(myurl)
@@ -35,7 +36,7 @@ def searchByTitle(title):
     else:
         print("Error Code:" + rescode)
 
-
+#제목 부제목 개봉일 배우 링크 유저평점 이건 네이버 영화 정보 찾기
 def findItemByInput(items):
     for index, item in enumerate(items):
         navertitle = cleanhtml(item['title'])
@@ -45,12 +46,14 @@ def findItemByInput(items):
         naverlink = cleanhtml(item['link'])
         naveruserScore = cleanhtml(item['userRating'])
 
+
         navertitle1 = navertitle.replace(" ", "")
         navertitle1 = navertitle1.replace("-", ",")
         navertitle1 = navertitle1.replace(":", ",")
 
         # 기자 평론가 평점을 얻어 옵니다
         spScore = getSpecialScore(naverlink)
+        spStory = getStroy(naverlink)
 
         # 네이버가 다루는 영화 고유 ID를 얻어 옵니다다
         naverid = re.split("code=", naverlink)[1]
@@ -61,7 +64,7 @@ def findItemByInput(items):
         #    img = Image.open(BytesIO(response.content))
         #    img.show()
 
-        print(index, navertitle, naversubtitle, naveruserScore, spScore)
+        print(index, navertitle) #naversubtitle,naverpubdate ,naveractor,naveruserScore, spScore)
 
 
 def getInfoFromNaver(searchTitle):
@@ -90,6 +93,17 @@ def getSpecialScore(URL):
         return float(scoreis)
     else:
         return 0.0
+def getStroy(URL):
+    soup = get_soup(URL)
+    scorearea = soup.find_all('div', 'story_area')
+    newsoup = BeautifulSoup(str(scorearea), 'lxml')
+    head_story =newsoup.find('h5')
+    if head_story != None:
+        head_story = newsoup.find('h5').text
+        
+
+    print(head_story)
 
 
-getInfoFromNaver(u"미션")
+
+getInfoFromNaver(u"언더워터")
