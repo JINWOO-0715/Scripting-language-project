@@ -52,9 +52,9 @@ def findItemByInput(items):
         navertitle1 = navertitle1.replace(":", ",")
 
         # 기자 평론가 평점을 얻어 옵니다
-        spScore = getSpecialScore(naverlink)
-        spStory = getStroy(naverlink)
-
+        #spScore = getSpecialScore(naverlink)
+        #spStory = getStroy(naverlink)
+        spMStory = getMStroy(naverlink)
         # 네이버가 다루는 영화 고유 ID를 얻어 옵니다다
         naverid = re.split("code=", naverlink)[1]
 
@@ -100,10 +100,31 @@ def getStroy(URL):
     head_story =newsoup.find('h5')
     if head_story != None:
         head_story = newsoup.find('h5').text
-        
+    # if main_story != None:
+    #     for i in main_story:
+    #         i. newsoup.find('p').text
 
-    print(head_story)
+def getMStroy(URL):
+    soup = get_soup(URL)
+    scorearea = soup.find_all('div', 'story_area')
+    newsoup = BeautifulSoup(str(scorearea), 'lxml')
+    content_infos =[]
+    contents_texts = newsoup.select('div.story_area > p.con_tx')
+    if len(contents_texts) == 0:
+        content_infos.append("줄거리 오류")
+    else:
+        for contents in contents_texts:
+            temp = contents.text
+            temp = temp.replace('\r', '')
+            temp = temp.replace('\xa0', '')
+            content_infos.append(temp)
+    print(content_infos)
 
 
+
+
+    # if main_story != None:
+    #     for i in main_story:
+    #         i. newsoup.find('p').text
 
 getInfoFromNaver(u"언더워터")
