@@ -50,7 +50,7 @@ def findItemByInput(items ):
         navertitle1 = navertitle1.replace(":", ",")
 
         # 기자 평론가 평점을 얻어 옵니다
-        #spScore = getSpecialScore(naverlink)
+        spScore = getSpecialScore(naverlink)
         #spStory = getStroy(naverlink)
         spMStory = getMStroy(naverlink)
         # 네이버가 다루는 영화 고유 ID를 얻어 옵니다다
@@ -61,7 +61,7 @@ def findItemByInput(items ):
         #    response = requests.get(item['image'])
         #    img = Image.open(BytesIO(response.content))
         #    img.show()
-        return spMStory
+        return spMStory , naveruserScore,spScore
 
 
 def getInfoFromNaver(searchTitle):
