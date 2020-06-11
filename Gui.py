@@ -6,8 +6,9 @@ import tkinter.messagebox
 import Gmail
 from Naver_Crowling import *
 from pandas import DataFrame
+import pandas
 import matplotlib.pyplot as plt
-
+import numpy
 
 from matplotlib import font_manager
 
@@ -172,12 +173,29 @@ class GUI:
         plt.rcParams['xtick.labelsize'] = 10.
         plt.rcParams['ytick.labelsize'] = 10.
         df = DataFrame(self.movie_ranking)
-        df =df.filter(items=['movieNm' , 'audiCnt'])
+        df = df.filter(items=['movieNm','audiAcc','audiCnt'])
+        df = df.astype({'audiAcc':int,'audiCnt':int})
         print(df)
-        plt.title("메롱쓰")
-        plt.xlabel('movieNm')
-        plt.ylabel('audiCnt')
-        plt.bar(df['movieNm'],df['audiCnt'])
+        plt.figure()
+        X=numpy.arange(10)
+        plt.bar(X+0.25, df['audiCnt'], color='g', width=0.25 , label ='금일관람객' )
+        plt.bar(df['movieNm'],df['audiAcc'],color='r' , width=0.25 , label ='누적관람객')
+        plt.ylim(200,100000)
+        for x, y in enumerate(list(df['audiAcc'])):
+            txt = "%d명" % y
+            plt.text(x, y, txt, fontsize=10, color='#000000',
+                        horizontalalignment='center', verticalalignment='bottom')
+        for x, y in enumerate(list(df['audiCnt'])):
+            txt = "%d명" % y
+            plt.text(x+0.25, y, txt, fontsize=10, color='#000000',
+                     horizontalalignment='center', verticalalignment='bottom')
+
+        plt.legend()
+        plt.title("관람객 그래프")
+        plt.xlabel('영화이름')
+        plt.ylabel('관객수')
+
+        # plt.bar(df['movieNm'],df['audiCnt'])
         plt.show()
 
 
