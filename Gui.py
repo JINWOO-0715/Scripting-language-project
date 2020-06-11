@@ -39,7 +39,6 @@ class GUI:
         self.InitMovieRankingText()
         self.InitMovieRankingListBox()
         self.InitMovieStorySearchButton()
-        self.MakeGraph()
         # gmail 추가
         self.InitMailButton()
         self.InitInputGmail()
@@ -126,8 +125,10 @@ class GUI:
         print(iSearchIndex)
         if iSearchIndex == 0:
             self.SearchDate()
+            self.MakeGraph()
         elif iSearchIndex == 1:
             self.SearchMovieStory()
+
         elif iSearchIndex == 2:
             pass  # SearchMarket()
         elif iSearchIndex == 3:
@@ -158,6 +159,7 @@ class GUI:
         self.movie_imformation_text.insert(INSERT, userscore)
         self.movie_imformation_text.insert(INSERT, "\n")
         self.movie_imformation_text.insert(INSERT, "줄거리 : %s" %Mstory)
+
 
 
     def SearchDate(self):
