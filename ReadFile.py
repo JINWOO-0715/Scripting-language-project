@@ -34,6 +34,7 @@ class Movie():
             responseData = response.read()
             result = json.loads(responseData)
             movieInfo = result['boxOfficeResult']['dailyBoxOfficeList']
+            print(result)
             return  movieInfo
         else:
             print("Error Code:" + rescode)
@@ -44,11 +45,11 @@ class Seoul():
     def __init__(self):
         self.movie_rank_service_key = requests.utils.unquote('77585a5357706a773737617a624a4a')
         self.movie_rank_url = 'http://openapi.seoul.go.kr:8088/%s/%s/movieTheatersBizInfo/1/5/'%(self.movie_rank_service_key ,
-                                                                                                 'xml')
+                                                                                                 'json')
         self.movie_rank_Params = '?' + urlencode(
             {
                 quote_plus('KEY'): self.movie_rank_service_key,  # 서비스키
-                quote_plus('TYPE'): 'xml',  # 조회 날짜
+                quote_plus('TYPE'): 'json',  # 조회 날짜
                 quote_plus('SERVICE'): 'movieTheatersBizInfo',  # 페이지 수
                 quote_plus('START_INDEX'): '1',  # K: 한국영화 조회 F:외국영화 default:전체
                 quote_plus('END_INDEX'): '5'  # “0105000000” 로서 조회된 지역코드입니다. (default : 전체)
@@ -59,10 +60,13 @@ class Seoul():
         request = urllib.request.Request(self.movie_rank_url)
         response = urllib.request.urlopen(request)
         rescode = response.getcode()
+
+        # 잘돌아가나 확인용
         if rescode == 200:
-            response_body = response.read()
-            print(response_body.decode())
+            responseData = response.read()
+            result = json.loads(responseData)
+            seoul_map = result['movieTheatersBizInfo']['row']
+
+            return seoul_map
         else:
             print("Error Code:" + rescode)
-
-Movie().crawl_movie()

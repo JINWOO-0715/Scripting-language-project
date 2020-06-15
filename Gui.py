@@ -31,6 +31,7 @@ class GUI:
         self.window.geometry("800x800")
         self.window.bind("<Button-1>" , callback)
         self.movie_ranking = Movie().crawl_movie()
+        self.movie_map = Seoul().crawl_movie()
 
         self.InitTopText()
         self.InitSearchListBox()
