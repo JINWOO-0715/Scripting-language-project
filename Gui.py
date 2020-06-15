@@ -73,6 +73,7 @@ class GUI:
         self.InputLabel = Entry(self.window, font=TempFont, width=22, borderwidth=12, relief='ridge')
         self.InputLabel.pack()
         self.InputLabel.place(x=180, y=50)
+
     #검색버튼 초기화
     def InitSearchButton(self):
         TempFont = font.Font(self.window, size=12, weight='bold', family='Consolas')
@@ -129,9 +130,8 @@ class GUI:
             self.MakeGraph()
         elif iSearchIndex == 1:
             self.SearchMovieStory()
-
         elif iSearchIndex == 2:
-            pass  # SearchMarket()
+            pass
         elif iSearchIndex == 3:
             pass  # SearchCultural()
 
