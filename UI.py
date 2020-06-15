@@ -30,16 +30,37 @@ movie_map = Seoul().crawl_movie()
 
 #박스오피스 그림 라벨
 label1=Label(window, text="랭킹 페이지", fg='red', font='helvetica 48' , image =image[4])
-label1.pack()
+label1.pack(side = RIGHT)
 label1.place(x=500, y=0)
+label1.configure(bg = '#F6D8CE' )
 
 #랭킹 페이지 생성
 movie_ranking_frame=Frame(window)
 notebook.add(movie_ranking_frame, text="페이지1",image=image[0])
+movie_ranking_frame.configure(bg = '#F79F81')
+
+#폰트
 TempFont = font.Font(movie_ranking_frame, size=20, weight='bold', family='Malgun Gothic')
-label1=Label(movie_ranking_frame, text="랭킹 페이지", fg='red', font=TempFont)
-label1.configure(bg = '#F6D8CE' )
-label1.pack()
+
+#왼쪽의 일간 박스 오피스 글씨
+movie_ranking_Text = Label(movie_ranking_frame, font = TempFont , text = "[일간 박스오피스]")
+movie_ranking_Text.pack()
+movie_ranking_Text.place(x=10)
+movie_ranking_Text.configure(bg = '#F79F81')
+
+#날짜 입력 받기
+day_InputLabel = Entry(movie_ranking_frame, font=TempFont, width=20, borderwidth=10, relief='ridge')
+day_InputLabel.pack()
+day_InputLabel.place(x=280 , y =0)
+day_InputLabel.configure(bg = '#F79F81')
+
+#검색 버튼 생성
+def SearchButtonAction():
+    pass
+SearchButton = Button(movie_ranking_frame, font=TempFont, text="검색", command=SearchButtonAction ,image=image[1])
+SearchButton.pack()
+
+SearchButton.place(x=650, y=0)
 
 # 페이지-영화 상세 정보 생성
 movie_information_frame=Frame(window)
