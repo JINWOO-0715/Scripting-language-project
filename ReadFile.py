@@ -34,7 +34,6 @@ class Movie():
             responseData = response.read()
             result = json.loads(responseData)
             movieInfo = result['boxOfficeResult']['dailyBoxOfficeList']
-            print(result)
             return  movieInfo
         else:
             print("Error Code:" + rescode)

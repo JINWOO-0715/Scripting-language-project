@@ -119,6 +119,17 @@ def getMStroy(URL):
             content_infos.append(temp)
     return content_infos
 
+#포스터 URL을 얻어옵니다.
+def getposter(URL):
+    soup = get_soup(URL)
+    soup = soup.find("div", class_="poster")
+    # img의 경로를 받아온다
+    imgUrl = soup.find("img")["src"]
+
+    # urlretrieve는 다운로드 함수
+    # img.alt는 이미지 대체 텍스트 == 마약왕
+    urllib.request.urlretrieve(imgUrl, soup.find("img")["alt"] + '.jpg')
+
 
 
 
