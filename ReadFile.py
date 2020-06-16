@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
 
 import urllib.request as ul
-from urllib.request import urlopen
 from urllib.parse import urlencode, unquote, quote_plus
-import xmltodict
 import urllib
 import requests
 import json
 from datetime import datetime ,timedelta
 
+import pandas as pd
 
 # 출력 확인 완료
 class Movie():
@@ -42,30 +41,8 @@ class Movie():
 class Seoul():
 
     def __init__(self):
-        self.movie_rank_service_key = requests.utils.unquote('77585a5357706a773737617a624a4a')
-        self.movie_rank_url = 'http://openapi.seoul.go.kr:8088/%s/%s/movieTheatersBizInfo/1/5/'%(self.movie_rank_service_key ,
-                                                                                                 'json')
-        self.movie_rank_Params = '?' + urlencode(
-            {
-                quote_plus('KEY'): self.movie_rank_service_key,  # 서비스키
-                quote_plus('TYPE'): 'json',  # 조회 날짜
-                quote_plus('SERVICE'): 'movieTheatersBizInfo',  # 페이지 수
-                quote_plus('START_INDEX'): '1',  # K: 한국영화 조회 F:외국영화 default:전체
-                quote_plus('END_INDEX'): '5'  # “0105000000” 로서 조회된 지역코드입니다. (default : 전체)
-            }
-        )
+        self.df= pd.read_excel('영화상영관.xlsx',sheet_name='영화상영관_1')
+
 
     def crawl_movie(self):
-        request = urllib.request.Request(self.movie_rank_url)
-        response = urllib.request.urlopen(request)
-        rescode = response.getcode()
-
-        # 잘돌아가나 확인용
-        if rescode == 200:
-            responseData = response.read()
-            result = json.loads(responseData)
-            seoul_map = result['movieTheatersBizInfo']['row']
-
-            return seoul_map
-        else:
-            print("Error Code:" + rescode)
+        return self.df

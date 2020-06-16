@@ -33,7 +33,6 @@ image.append(PhotoImage(file='resource/output/small_search.png'))  # 6
 image.append(PhotoImage(file='resource/output/small_map.png'))  # 7
 movie_ranking = Movie().crawl_movie()
 movie_map = Seoul().crawl_movie()
-mdf = DataFrame(movie_map)
 
 # 검색 버튼 기능
 def SearchButtonAction():
@@ -192,8 +191,10 @@ def showmap():
     pass
 def searchmap():
     m = map_InputLabel.get()
-    contains_korea_or_japan = mdf['ADDR_OLD'].str.contains("%s"%m)
-    subset_df = mdf[contains_korea_or_japan]
+    movie_map.filter(items=['번호', '소재지전체주소', '좌표정보(X)', '좌표정보(Y)'])
+    contains_korea_or_japan = movie_map['ADDR_OLD'].str.contains("%s"%m)
+    print(contains_korea_or_japan)
+    subset_df = movie_map[contains_korea_or_japan]
     print(subset_df)
 # 폰트
 TempFont = font.Font(movie_map_frame, size=20, weight='bold', family='Malgun Gothic')
