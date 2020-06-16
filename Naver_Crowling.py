@@ -58,9 +58,7 @@ def findItemByInput(items ):
         naverid = re.split("code=", naverlink)[1]
 
         url = 'https://movie.naver.com/movie/bi/mi/basic.nhn?code=' + naverid
-        req = urllib.request.Request(url)
         res = urllib.request.urlopen(url).read()
-
         soup = BeautifulSoup(res, 'html.parser')
         soup = soup.find("div", class_="poster")
         # img의 경로를 받아온다
@@ -68,11 +66,11 @@ def findItemByInput(items ):
 
         # urlretrieve는 다운로드 함수
         # img.alt는 이미지 대체 텍스트 == 마약왕
-        urllib.request.urlretrieve(imgUrl, soup.find("img")["alt"] + '.jpg')
+        urllib.request.urlretrieve(imgUrl, soup.find("img")["alt"] + ".jpg")
 
 
 
-        # 영화의 타이틀 이미지를 표시합니다
+        # # 영화의 타이틀 이미지를 표시합니다
         # if (item['image'] != None and "http" in item['image']):
         #    response = requests.get(item['image'])
         #    img = Image.open(BytesIO(response.content))
@@ -135,16 +133,6 @@ def getMStroy(URL):
             content_infos.append(temp)
     return content_infos
 
-#포스터 URL을 얻어옵니다.
-def getposter(URL):
-    soup = get_soup(URL)
-    soup = soup.find("div", class_="poster")
-    # img의 경로를 받아온다
-    imgUrl = soup.find("img")["src"]
-
-    # urlretrieve는 다운로드 함수
-    # img.alt는 이미지 대체 텍스트 == 마약왕
-    urllib.request.urlretrieve(imgUrl, soup.find("img")["alt"] + '.jpg')
 
 
 
