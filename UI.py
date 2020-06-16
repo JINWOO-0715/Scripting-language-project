@@ -31,6 +31,7 @@ image.append(PhotoImage(file='resource/output/boxoffice.png'))  # 4
 image.append(PhotoImage(file='resource/output/graph.png'))  # 5
 image.append(PhotoImage(file='resource/output/small_search.png'))  # 6
 image.append(PhotoImage(file='resource/output/small_map.png'))  # 7
+image.append(PhotoImage(file='resource/output/small_bookmark.png'))  # 8
 movie_ranking = Movie().crawl_movie()
 movie_map = Seoul().crawl_movie()
 
@@ -233,7 +234,7 @@ movie_SearchButton.pack()
 movie_SearchButton.place(x=650, y=3)
 
 #북마크  버튼
-MovieBookMarkButton = Button(movie_information_frame, image=image[7], command=bookmark ,bg='#F6D8CE')
+MovieBookMarkButton = Button(movie_information_frame, image=image[8], command=bookmark ,bg='#F6D8CE')
 MovieBookMarkButton.pack()
 MovieBookMarkButton.place(x=720, y=3)
 
@@ -290,8 +291,6 @@ map_list_box.configure(bg='#F6D8CE')
 
 # 폰트
 TempFont = font.Font(movie_map_frame, size=20, weight='bold', family='Malgun Gothic')
-
-
 
 # 왼쪽의  영화관 찾기 글씨
 movie_ranking_Text = Label(movie_map_frame, font=TempFont, text="[영화관 찾기]")

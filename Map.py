@@ -10,4 +10,3 @@ def Pressed(x,y):
     # html 파일로 저장
     map_osm.save('osm.html')
     webbrowser.open_new('osm.html')
-Pressed()
