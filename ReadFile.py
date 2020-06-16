@@ -43,6 +43,7 @@ class Seoul():
     def __init__(self):
         self.df= pd.read_excel('영화상영관.xlsx',sheet_name='영화상영관_1')
 
-
     def crawl_movie(self):
         return self.df
+
+

@@ -15,7 +15,7 @@ def callback(event):
 
 
 window = Tk()
-window.title("서울시 영화 정보 검색")
+window.title("영화 정보 검색")
 
 window.bind("<Button-1>", callback)
 
@@ -174,6 +174,13 @@ MovieStorySearchButton = Button(movie_ranking_frame, image=image[5], command=mak
 MovieStorySearchButton.pack()
 MovieStorySearchButton.place(x=720, y=3)
 
+
+
+
+
+
+
+
 # 페이지-영화 상세 정보 생성
 movie_information_frame = Frame(window)
 notebook.add(movie_information_frame, text="페이지2", image=image[1])
@@ -182,25 +189,106 @@ movie_information_frame.configure(bg='#F79F81')
 label1 = Label(movie_information_frame, text="영화 상세 정보 생성", fg='red', font=TempFont)
 label1.pack()
 
+
+#영화 리스트 박스
+TempFont = font.Font(movie_information_frame, size=10, weight='bold', family='Malgun Gothic')
+
+map_list_box = Listbox(movie_information_frame, font=TempFont, activestyle='none',
+                       width=50, height=18, borderwidth=20, relief='ridge')
+map_list_box.pack()
+map_list_box.place(x=10, y=120)
+map_list_box.configure(bg='#F6D8CE')
+
+# 폰트
+TempFont = font.Font(movie_information_frame, size=20, weight='bold', family='Malgun Gothic')
+
+def search_movie():
+    global movie_Text
+    a=getData2(movie_InputLabel.get())
+    print(a)
+def bookmark():
+    pass
+
+# 왼쪽의  영화관 찾기 글씨
+movie_Text = Label(movie_information_frame, font=TempFont, text="[영화 찾기]")
+movie_Text.pack()
+movie_Text.place(x=10)
+movie_Text.configure(bg='#F79F81')
+
+#영화 입력 받기 라벨
+movie_InputLabel = Entry(movie_information_frame, font=TempFont, width=20, borderwidth=10, relief='ridge')
+movie_InputLabel.pack()
+movie_InputLabel.place(x=280, y=0)
+movie_InputLabel.configure(bg='#F79F81')
+
+#영화 검색 버튼
+movie_SearchButton = Button(movie_information_frame, font=TempFont, text="검색", command=search_movie, image=image[6],bg='#F6D8CE')
+movie_SearchButton.pack()
+movie_SearchButton.place(x=650, y=3)
+
+#북마크  버튼
+MovieBookMarkButton = Button(movie_information_frame, image=image[7], command=bookmark ,bg='#F6D8CE')
+MovieBookMarkButton.pack()
+MovieBookMarkButton.place(x=720, y=3)
+
+
+
+
+
+
+
+
 # 페이지 -영화관 지도 생성
 movie_map_frame = Frame(window)
 notebook.add(movie_map_frame, image=image[2])
 movie_map_frame.configure(bg='#F79F81')
+select_map_list =None
 
 def showmap():
-    pass
+    global select_map_list
+    num = map_list_box.curselection()
+    i = int(num[0])
+    if i%2!=0:
+        i+=1
+    x =select_map_list['좌표정보(X)'].iloc[i]
+    y =select_map_list['좌표정보(Y)'].iloc[i]
+    print(x,y)
+    Pressed(x,y)
+
+
+
+
 def searchmap():
+    global select_map_list
     m = map_InputLabel.get()
-    movie_map.filter(items=['번호', '소재지전체주소', '좌표정보(X)', '좌표정보(Y)'])
-    contains_korea_or_japan = movie_map['ADDR_OLD'].str.contains("%s"%m)
-    print(contains_korea_or_japan)
+    movie_map.filter(items=['번호', '소재지전체주소', '사업장명','좌표정보(X)', '좌표정보(Y)'])
+    contains_korea_or_japan = movie_map['소재지전체주소'].str.contains("%s"%m)
     subset_df = movie_map[contains_korea_or_japan]
-    print(subset_df)
+    subset_df= subset_df.filter(items=['소재지전체주소', '사업장명','좌표정보(X)', '좌표정보(Y)'])
+    map_list_box.delete(0, map_list_box.size() )
+    select_map_list =subset_df
+
+    for i in range(len(subset_df)):
+        map_list_box.insert(0,subset_df['사업장명'].iloc[i] ,subset_df['소재지전체주소'].iloc[i])
+
+
+
+#맵 리스트 박스
+TempFont = font.Font(movie_map_frame, size=10, weight='bold', family='Malgun Gothic')
+
+map_list_box = Listbox(movie_map_frame, font=TempFont, activestyle='none',
+                       width=50, height=18, borderwidth=20, relief='ridge')
+map_list_box.pack()
+map_list_box.place(x=10, y=120)
+map_list_box.configure(bg='#F6D8CE')
+
 # 폰트
 TempFont = font.Font(movie_map_frame, size=20, weight='bold', family='Malgun Gothic')
 
-# 왼쪽의 서울시 영화관 찾기 글씨
-movie_ranking_Text = Label(movie_map_frame, font=TempFont, text="[서울시 영화관 찾기]")
+
+
+# 왼쪽의  영화관 찾기 글씨
+movie_ranking_Text = Label(movie_map_frame, font=TempFont, text="[영화관 찾기]")
 movie_ranking_Text.pack()
 movie_ranking_Text.place(x=10)
 movie_ranking_Text.configure(bg='#F79F81')

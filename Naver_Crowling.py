@@ -10,7 +10,7 @@ import requests
 # 네이버 검색 Open API 사용 요청시 얻게되는 정보를 입력합니다
 naver_client_id = "mHqayEjLQi3Y5vpMchIt"
 naver_client_secret = "BxD49l5brh"
-
+movielist=[]
 
 def cleanhtml(raw_html):
     cleanr = re.compile('<.*?>')
@@ -57,16 +57,18 @@ def findItemByInput(items ):
         # 네이버가 다루는 영화 고유 ID를 얻어 옵니다다
         naverid = re.split("code=", naverlink)[1]
 
-        url = 'https://movie.naver.com/movie/bi/mi/basic.nhn?code=' + naverid
-        res = urllib.request.urlopen(url).read()
-        soup = BeautifulSoup(res, 'html.parser')
-        soup = soup.find("div", class_="poster")
-        # img의 경로를 받아온다
-        imgUrl = soup.find("img")["src"]
 
-        # urlretrieve는 다운로드 함수
-        # img.alt는 이미지 대체 텍스트 == 마약왕
-        urllib.request.urlretrieve(imgUrl, soup.find("img")["alt"] + ".jpg")
+        # 이미지 저장파일인데 왜 안됌
+        # url = 'https://movie.naver.com/movie/bi/mi/basic.nhn?code=' + naverid
+        # res = urllib.request.urlopen(url).read()
+        # soup = BeautifulSoup(res, 'html.parser')
+        # soup = soup.find("div", class_="poster")
+        # # img의 경로를 받아온다
+        # imgUrl = soup.find("img")["src"]
+        #
+        # # urlretrieve는 다운로드 함수
+        # # img.alt는 이미지 대체 텍스트 == 마약왕
+        # urllib.request.urlretrieve(imgUrl, soup.find("img")["alt"] + ".jpg")
 
 
 
@@ -75,7 +77,60 @@ def findItemByInput(items ):
         #    response = requests.get(item['image'])
         #    img = Image.open(BytesIO(response.content))
         #    img.show()
+
         return spMStory , naveruserScore,spScore
+
+def findItemByInput2(items ):
+    for index, item in enumerate(items):
+        navertitle = cleanhtml(item['title'])
+        naversubtitle = cleanhtml(item['subtitle'])
+        naverpubdate = cleanhtml(item['pubDate'])
+        naveractor = cleanhtml(item['actor'])
+        naverlink = cleanhtml(item['link'])
+        naveruserScore = cleanhtml(item['userRating'])
+        navertitle1 = navertitle.replace(" ", "")
+        navertitle1 = navertitle1.replace("-", ",")
+        navertitle1 = navertitle1.replace(":", ",")
+
+        # 기자 평론가 평점을 얻어 옵니다
+        spScore = getSpecialScore(naverlink)
+        #spStory = getStroy(naverlink)
+        spMStory = getMStroy(naverlink)
+        # 네이버가 다루는 영화 고유 ID를 얻어 옵니다다
+        naverid = re.split("code=", naverlink)[1]
+
+        movielist.append({'title':navertitle,'개봉일': naverpubdate,'배우':naveractor , '링크':naverlink
+                         ,'유저평점':naveruserScore ,'기자평점':spScore ,'줄거리':spMStory})
+
+        # 이미지 저장파일인데 왜 안됌
+        # url = 'https://movie.naver.com/movie/bi/mi/basic.nhn?code=' + naverid
+        # res = urllib.request.urlopen(url).read()
+        # soup = BeautifulSoup(res, 'html.parser')
+        # soup = soup.find("div", class_="poster")
+        # # img의 경로를 받아온다
+        # imgUrl = soup.find("img")["src"]
+        #
+        # # urlretrieve는 다운로드 함수
+        # # img.alt는 이미지 대체 텍스트 == 마약왕
+        # urllib.request.urlretrieve(imgUrl, soup.find("img")["alt"] + ".jpg")
+
+
+
+        # # 영화의 타이틀 이미지를 표시합니다
+        # if (item['image'] != None and "http" in item['image']):
+        #    response = requests.get(item['image'])
+        #    img = Image.open(BytesIO(response.content))
+        #    img.show()
+
+
+def getData2(searchTitle):
+    movielist.clear()
+    items = searchByTitle(searchTitle)
+    if (items != None):
+        findItemByInput2(items)
+    else:
+        print("No result")
+    return movielist
 
 
 def getInfoFromNaver(searchTitle):
@@ -132,7 +187,6 @@ def getMStroy(URL):
             temp = temp.replace('\xa0', '')
             content_infos.append(temp)
     return content_infos
-
 
 
 
