@@ -190,14 +190,7 @@ label1 = Label(movie_information_frame, text="영화 상세 정보 생성", fg='
 label1.pack()
 
 
-#영화 리스트 박스
-TempFont = font.Font(movie_information_frame, size=10, weight='bold', family='Malgun Gothic')
 
-map_list_box = Listbox(movie_information_frame, font=TempFont, activestyle='none',
-                       width=50, height=18, borderwidth=20, relief='ridge')
-map_list_box.pack()
-map_list_box.place(x=10, y=120)
-map_list_box.configure(bg='#F6D8CE')
 
 # 폰트
 TempFont = font.Font(movie_information_frame, size=20, weight='bold', family='Malgun Gothic')
@@ -205,7 +198,10 @@ TempFont = font.Font(movie_information_frame, size=20, weight='bold', family='Ma
 def search_movie():
     global movie_Text
     a=getData2(movie_InputLabel.get())
-    print(a)
+    for i in range (len(a)):
+        print(a[i]['title'])
+        movie_list_box.insert(5,a[i]['title'])
+
 def bookmark():
     pass
 
@@ -215,7 +211,17 @@ movie_Text.pack()
 movie_Text.place(x=10)
 movie_Text.configure(bg='#F79F81')
 
+#영화 리스트 박스
+TempFont = font.Font(movie_information_frame, size=10, weight='bold', family='Malgun Gothic')
+
+movie_list_box = Listbox(movie_information_frame, font=TempFont, activestyle='none',
+                       width=35, height=18, borderwidth=20, relief='ridge')
+movie_list_box.pack()
+movie_list_box.place(x=10, y=120)
+movie_list_box.configure(bg='#F6D8CE')
+
 #영화 입력 받기 라벨
+TempFont = font.Font(movie_information_frame, size=20, weight='bold', family='Malgun Gothic')
 movie_InputLabel = Entry(movie_information_frame, font=TempFont, width=20, borderwidth=10, relief='ridge')
 movie_InputLabel.pack()
 movie_InputLabel.place(x=280, y=0)
