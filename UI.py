@@ -67,12 +67,14 @@ def SearchMovieStory():
     movie_imformation_text.insert(INSERT, userscore)
     movie_imformation_text.insert(INSERT, "\n")
     movie_imformation_text.insert(INSERT, "줄거리 : %s" % Mstory)
+    image.append('%s.jpg', % movie_ranking[i]['movieNm'])
+    label1 = Label(window, image=image[5])
+    label1.pack(side=RIGHT)
+    label1.place(x=500, y=0)
+    label1.configure(bg='#F6D8CE')
 
 #박스오피스 그림 라벨
-label1=Label(window,  image =image[4])
-label1.pack(side = RIGHT)
-label1.place(x=500, y=0)
-label1.configure(bg = '#F6D8CE' )
+
 
 #랭킹 페이지 생성
 movie_ranking_frame=Frame(window)

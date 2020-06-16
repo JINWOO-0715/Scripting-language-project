@@ -6,6 +6,7 @@ import json
 import re
 import requests
 
+
 # 네이버 검색 Open API 사용 요청시 얻게되는 정보를 입력합니다
 naver_client_id = "mHqayEjLQi3Y5vpMchIt"
 naver_client_secret = "BxD49l5brh"
@@ -54,7 +55,22 @@ def findItemByInput(items ):
         #spStory = getStroy(naverlink)
         spMStory = getMStroy(naverlink)
         # 네이버가 다루는 영화 고유 ID를 얻어 옵니다다
-        #naverid = re.split("code=", naverlink)[1]
+        naverid = re.split("code=", naverlink)[1]
+
+        url = 'https://movie.naver.com/movie/bi/mi/basic.nhn?code=' + naverid
+        req = urllib.request.Request(url)
+        res = urllib.request.urlopen(url).read()
+
+        soup = BeautifulSoup(res, 'html.parser')
+        soup = soup.find("div", class_="poster")
+        # img의 경로를 받아온다
+        imgUrl = soup.find("img")["src"]
+
+        # urlretrieve는 다운로드 함수
+        # img.alt는 이미지 대체 텍스트 == 마약왕
+        urllib.request.urlretrieve(imgUrl, soup.find("img")["alt"] + '.jpg')
+
+
 
         # 영화의 타이틀 이미지를 표시합니다
         # if (item['image'] != None and "http" in item['image']):
