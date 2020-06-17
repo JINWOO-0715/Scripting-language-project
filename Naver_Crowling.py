@@ -99,7 +99,7 @@ def findItemByInput2(items):
         naverid = re.split("code=", naverlink)[1]
 
         movielist.append({'title':navertitle,'개봉일': naverpubdate,'배우':naveractor , '링크':naverlink
-                         ,'유저평점':naveruserScore ,'기자평점':spScore ,'줄거리':spMStory})
+                             ,'유저평점':naveruserScore ,'기자평점':spScore ,'줄거리':spMStory})
 
 
         url = 'https://movie.naver.com/movie/bi/mi/photoViewPopup.nhn?movieCode=' + naverid
@@ -110,9 +110,10 @@ def findItemByInput2(items):
         if(soup !=None):
             imgUrl = soup.find("img")["src"]
 
-        # urlretrieve는 다운로드 함수
-        # img.alt는 이미지 대체 텍스트 == 마약왕
+            # urlretrieve는 다운로드 함수
+            # img.alt는 이미지 대체 텍스트 == 마약왕
             urllib.request.urlretrieve(imgUrl, soup.find("img")["alt"] + ".jpg")
+
 
 
 def getData2(searchTitle):

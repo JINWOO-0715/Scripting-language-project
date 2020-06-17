@@ -216,7 +216,7 @@ def search_movie():
     search_movie_list = getData2(movie_InputLabel.get())
     movie_list_box.delete(0, movie_list_box.size())
     for i in range(len(search_movie_list)):
-        movie_list_box.insert(5, search_movie_list[i]['title'])
+        movie_list_box.insert(10, search_movie_list[i]['title'])
 
 save_bookmark = pd.read_csv('sample.csv')
 
@@ -226,9 +226,10 @@ def bookmark():
     i = int(num[0])
     save_bookmark= save_bookmark.append(search_movie_list[i] ,ignore_index=True)
     save_bookmark.to_csv('sample.csv')
+    save_bookmark = pd.read_csv('sample.csv')
     bookmark_movie_list_box.delete(0,bookmark_movie_list_box.size())
     for i in range(len(save_bookmark)):
-        bookmark_movie_list_box.insert(0, save_bookmark.iloc[i]['title'])
+        bookmark_movie_list_box.insert(10, save_bookmark.iloc[i]['title'])
 
 
 def SearchMovieInfo():
@@ -364,7 +365,7 @@ def searchmap():
     select_map_list = subset_df
 
     for i in range(len(subset_df)):
-        map_list_box.insert(0, subset_df['사업장명'].iloc[i] + "-" + subset_df['소재지전체주소'].iloc[i])
+        map_list_box.insert(10, subset_df['사업장명'].iloc[i] + "-" + subset_df['소재지전체주소'].iloc[i])
 
 
 # 맵 리스트 박스
@@ -401,6 +402,16 @@ MovieStorySearchButton = Button(movie_map_frame, image=image[7], command=showmap
 MovieStorySearchButton.pack()
 MovieStorySearchButton.place(x=720, y=3)
 
+
+
+
+
+
+
+
+
+
+
 # 페이지 - 메일 & 텔레그램
 movie_mail_frame = Frame(window)
 notebook.add(movie_mail_frame, image=image[3])
@@ -433,6 +444,18 @@ movie_ranking_Text = Label(movie_mail_frame, font=TempFont, text="북마크 \n �
 movie_ranking_Text.pack()
 movie_ranking_Text.place(x=10)
 movie_ranking_Text.configure(bg='#F79F81')
+
+def bookmark_remove():
+    global save_bookmark
+    num = bookmark_movie_list_box.curselection()
+    n = int(num[0])
+    save_bookmark= save_bookmark.drop(n,0)
+    save_bookmark.to_csv('sample.csv')
+    save_bookmark = pd.read_csv('sample.csv')
+    bookmark_movie_list_box.delete(0,bookmark_movie_list_box.size())
+
+    for i in range(len(save_bookmark)):
+        bookmark_movie_list_box.insert(10, save_bookmark.iloc[i]['title'])
 
 def bookmark_show():
     global bookmark_ima , bookmark_movie_information_poster
@@ -480,7 +503,7 @@ bookmark_search_button.pack()
 bookmark_search_button.place(x=80, y=500)
 
 # 북마크 제거 버튼
-bookmark_remove_button= Button(movie_mail_frame, image=image[10], command=bookmark_show, bg='#F6D8CE')
+bookmark_remove_button= Button(movie_mail_frame, image=image[10], command=bookmark_remove, bg='#F6D8CE')
 bookmark_remove_button.pack()
 bookmark_remove_button.place(x=200, y=500)
 
@@ -495,7 +518,7 @@ bookmark_movie_list_box.place(x=10, y=120)
 bookmark_movie_list_box.configure(bg='#F6D8CE')
 
 for i in range(len(save_bookmark)):
-    bookmark_movie_list_box.insert(0, save_bookmark.iloc[i]['title'])
+    bookmark_movie_list_box.insert(10, save_bookmark.iloc[i]['title'])
 
 
 # 북마크 영화 정보 포스터 박스
