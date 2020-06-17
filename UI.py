@@ -216,23 +216,15 @@ def search_movie():
     for i in range(len(search_movie_list)):
         movie_list_box.insert(5, search_movie_list[i]['title'])
 
-cnt=0
+save_bookmark = pd.read_csv('sample.csv')
+
 def bookmark():
     global save_bookmark,cnt
     num = movie_list_box.curselection()
     i = int(num[0])
-    if(cnt==0):
-        save_bookmark = DataFrame(search_movie_list[i])
-        cnt+=1
-
-    else:
-        save_bookmark.loc[cnt] =search_movie_list[i]
-        bookmark_movie_list_box.insert(bookmark_movie_list_box.size()+1,save_bookmark[i])
-        cnt+=1
+    save_bookmark= save_bookmark.append(search_movie_list[i] ,ignore_index=True)
     save_bookmark.to_csv('sample.csv')
-
-
-
+    print(save_bookmark)
 
 def SearchMovieInfo():
     global ima, movie_information_poster
@@ -429,7 +421,37 @@ movie_ranking_Text.place(x=10)
 movie_ranking_Text.configure(bg='#F79F81')
 
 def bookmark_show():
-    pass
+    global ima, movie_information_poster
+    num = movie_list_box.curselection()
+    i = int(num[0])
+    bookmark_movie_list_score_show_box.configure(state='normal')
+    bookmark_movie_list_score_show_box.delete('1.0', END)
+    bookmark_movie_list_score_show_box.insert(INSERT, save_bookmark[i]['title'])
+    bookmark_movie_list_score_show_box.insert(INSERT, "\n")
+    bookmark_movie_list_score_show_box.insert(INSERT, "개봉일: ")
+    bookmark_movie_list_score_show_box.insert(INSERT, save_bookmark[i]['개봉일'])
+    bookmark_movie_list_score_show_box.insert(INSERT, " ")
+    bookmark_movie_list_score_show_box.insert(INSERT, "\n")
+    bookmark_movie_list_score_show_box.insert(INSERT, "배우: ")
+    bookmark_movie_list_score_show_box.insert(INSERT, save_bookmark[i]['배우'])
+    bookmark_movie_list_score_show_box.insert(INSERT, "\n")
+    bookmark_movie_list_score_show_box.insert(INSERT, "유저평점: ")
+    bookmark_movie_list_score_show_box.insert(INSERT, save_bookmark[i]['유저평점'])
+    bookmark_movie_list_score_show_box.insert(INSERT, "\n")
+    bookmark_movie_list_score_show_box.insert(INSERT, "기자 평론가 평점: ")
+    bookmark_movie_list_score_show_box.insert(INSERT, save_bookmark[i]['기자평점'])
+
+    bookmark_movie_list_story_show_box.configure(state='normal')
+    bookmark_movie_list_story_show_box.delete('1.0', END)
+    bookmark_movie_list_story_show_box.insert(INSERT, "줄거리 : %s \n" % save_bookmark[i]['줄거리'])
+    bookmark_movie_list_story_show_box.insert(INSERT, "\n")
+    bookmark_movie_list_story_show_box.insert(INSERT, "네이버 링크 : %s" % save_bookmark[i]['링크'])
+
+    ima = Image.open('%s.jpg' % save_bookmark[i]['title'])
+    ima = ima.resize((160, 210))
+    bookmark_movie_information_poster.img = ImageTk.PhotoImage(ima)
+    bookmark_movie_information_poster['image'] = movie_information_poster.img
+
 
 
 
