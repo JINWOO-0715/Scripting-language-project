@@ -4,11 +4,13 @@ import tkinter.ttk
 from ReadFile import *
 from Naver_Crowling import *
 from pandas import DataFrame
-import pandas
+import pandas as pd
 import matplotlib.pyplot as plt
 import numpy
 from Map import *
 from PIL import Image, ImageTk
+import Gmail
+
 
 def callback(event):
     print("clicked at", event.x, event.y)
@@ -32,10 +34,11 @@ image.append(PhotoImage(file='resource/output/graph.png'))  # 5
 image.append(PhotoImage(file='resource/output/small_search.png'))  # 6
 image.append(PhotoImage(file='resource/output/small_map.png'))  # 7
 image.append(PhotoImage(file='resource/output/small_bookmark.png'))  # 8
-
+image.append(PhotoImage(file='resource/output/small_gmail.png'))  # 9
 
 movie_ranking = Movie().crawl_movie()
 movie_map = Seoul().crawl_movie()
+
 
 # 검색 버튼 기능
 def SearchButtonAction():
@@ -76,8 +79,8 @@ def SearchMovieStory():
     movie_imformation_text.insert(INSERT, "줄거리 : %s" % Mstory)
 
     # 영화 포스터 라벨
-    im = Image.open('%s.jpg'%movie_ranking[i]['movieNm'])
-    im= im.resize((150, 200))
+    im = Image.open('%s.jpg' % movie_ranking[i]['movieNm'])
+    im = im.resize((150, 200))
     movie_poster.img = ImageTk.PhotoImage(im)
     movie_poster['image'] = movie_poster.img
 
@@ -91,7 +94,6 @@ movie_ranking_frame.configure(bg='#F79F81')
 label1 = Label(window, image=image[4], bg='#F79F81')
 label1.pack(side=RIGHT)
 label1.place(x=500, y=0)
-
 
 # 폰트
 TempFont = font.Font(movie_ranking_frame, size=20, weight='bold', family='Malgun Gothic')
@@ -109,7 +111,8 @@ day_InputLabel.place(x=280, y=0)
 day_InputLabel.configure(bg='#F79F81')
 
 # 검색 버튼 생성
-SearchButton = Button(movie_ranking_frame, font=TempFont, text="검색", command=SearchButtonAction, image=image[6],bg='#F6D8CE')
+SearchButton = Button(movie_ranking_frame, font=TempFont, text="검색", command=SearchButtonAction, image=image[6],
+                      bg='#F6D8CE')
 SearchButton.pack()
 SearchButton.place(x=650, y=3)
 
@@ -130,15 +133,13 @@ MovieStorySearchButton = Button(movie_ranking_frame, font=TempFont, text="상세
 MovieStorySearchButton.pack(side=LEFT)
 MovieStorySearchButton.place(x=80, y=400)
 
-#영화포스터
+# 영화포스터
 movie_poster = Label(movie_ranking_frame, width=150, height=200, borderwidth=20, relief='ridge')
 movie_poster.place(x=250, y=140)
 im = Image.open('resource/output/small_bookmark.png')
 im = im.resize((150, 200))
 movie_poster.img = ImageTk.PhotoImage(im)
 movie_poster['image'] = movie_poster.img
-
-
 
 # 텍스트 - 영화 상세 정보 담는 텍스트함
 TempFont = font.Font(movie_ranking_frame, size=10, weight='bold', family='Malgun Gothic')
@@ -156,13 +157,13 @@ def makegraph():
     plt.rcParams['xtick.labelsize'] = 10.
     plt.rcParams['ytick.labelsize'] = 10.
     df = DataFrame(movie_ranking)
-    df = df.filter(items=['rnum','movieNm', 'audiAcc', 'audiCnt'])
+    df = df.filter(items=['rnum', 'movieNm', 'audiAcc', 'audiCnt'])
     df = df.astype({'audiAcc': int, 'audiCnt': int})
 
     plt.figure()
     X = numpy.arange(10)
     plt.bar(X + 0.3, df['audiCnt'], color='g', width=0.25, label='금일관람객')
-    plt.bar(df['rnum']+'위', df['audiAcc'], color='r', width=0.25, label='누적관람객')
+    plt.bar(df['rnum'] + '위', df['audiAcc'], color='r', width=0.25, label='누적관람객')
     for x, y in enumerate(list(df['audiAcc'])):
         txt = "%d" % y
         plt.text(x, y, txt, fontsize=10, color='#000000',
@@ -182,9 +183,16 @@ def makegraph():
 
 
 # 버튼 - 그래프
-MovieStorySearchButton = Button(movie_ranking_frame, image=image[5], command=makegraph ,bg='#F6D8CE')
+MovieStorySearchButton = Button(movie_ranking_frame, image=image[5], command=makegraph, bg='#F6D8CE')
 MovieStorySearchButton.pack()
 MovieStorySearchButton.place(x=720, y=3)
+
+
+
+
+
+
+
 
 
 
@@ -197,24 +205,37 @@ movie_information_frame.configure(bg='#F79F81')
 
 # 폰트
 TempFont = font.Font(movie_information_frame, size=20, weight='bold', family='Malgun Gothic')
-search_movie_list=[]
+search_movie_list = []
 
 
 def search_movie():
-    global movie_Text ,search_movie_list
+    global movie_Text, search_movie_list
     search_movie_list.clear()
-    print(movie_InputLabel.get())
-    search_movie_list=getData2(movie_InputLabel.get())
+    search_movie_list = getData2(movie_InputLabel.get())
     movie_list_box.delete(0, movie_list_box.size())
-    for i in range (len(search_movie_list)):
-        movie_list_box.insert(5,search_movie_list[i]['title'])
+    for i in range(len(search_movie_list)):
+        movie_list_box.insert(5, search_movie_list[i]['title'])
 
-
+cnt=0
 def bookmark():
-    pass
+    global save_bookmark,cnt
+    num = movie_list_box.curselection()
+    i = int(num[0])
+    if(cnt==0):
+        save_bookmark = DataFrame(search_movie_list[i])
+        cnt+=1
+
+    else:
+        save_bookmark.loc[cnt] =search_movie_list[i]
+        bookmark_movie_list_box.insert(bookmark_movie_list_box.size()+1,save_bookmark[i])
+        cnt+=1
+    save_bookmark.to_csv('sample.csv')
+
+
+
 
 def SearchMovieInfo():
-    global ima,movie_information_poster
+    global ima, movie_information_poster
     num = movie_list_box.curselection()
     i = int(num[0])
     movie_list_score_show_box.configure(state='normal')
@@ -233,62 +254,58 @@ def SearchMovieInfo():
     movie_list_score_show_box.insert(INSERT, "\n")
     movie_list_score_show_box.insert(INSERT, "기자 평론가 평점: ")
     movie_list_score_show_box.insert(INSERT, search_movie_list[i]['기자평점'])
-
     movie_list_story_show_box.configure(state='normal')
     movie_list_story_show_box.delete('1.0', END)
-    movie_list_story_show_box.insert(INSERT, "줄거리 : %s" %search_movie_list[i]['줄거리'])
+    movie_list_story_show_box.insert(INSERT, "줄거리 : %s \n" % search_movie_list[i]['줄거리'])
     movie_list_score_show_box.insert(INSERT, "\n")
     movie_list_story_show_box.insert(INSERT, "네이버 링크 : %s" % search_movie_list[i]['링크'])
 
-    ima = Image.open('%s.jpg'%search_movie_list[i]['title'])
-    ima= ima.resize((160, 210))
+    ima = Image.open('%s.jpg' % search_movie_list[i]['title'])
+    ima = ima.resize((160, 210))
     movie_information_poster.img = ImageTk.PhotoImage(ima)
     movie_information_poster['image'] = movie_information_poster.img
 
 
-
-
-# 왼쪽의  영화관 찾기 글씨
+# 왼쪽의  영화 찾기 글씨
 movie_Text = Label(movie_information_frame, font=TempFont, text="[영화 찾기]")
 movie_Text.pack()
 movie_Text.place(x=10)
 movie_Text.configure(bg='#F79F81')
 
-#영화 리스트 박스
+# 영화 리스트 박스
 TempFont = font.Font(movie_information_frame, size=10, weight='bold', family='Malgun Gothic')
 
 movie_list_box = Listbox(movie_information_frame, font=TempFont, activestyle='none',
-                       width=30, height=18, borderwidth=20, relief='ridge')
+                         width=30, height=18, borderwidth=20, relief='ridge')
 movie_list_box.pack()
 movie_list_box.place(x=10, y=120)
 movie_list_box.configure(bg='#F6D8CE')
 
-#영화 입력 받기 라벨
+# 영화 입력 받기 라벨
 TempFont = font.Font(movie_information_frame, size=20, weight='bold', family='Malgun Gothic')
 movie_InputLabel = Entry(movie_information_frame, font=TempFont, width=20, borderwidth=10, relief='ridge')
 movie_InputLabel.pack()
 movie_InputLabel.place(x=280, y=0)
 movie_InputLabel.configure(bg='#F79F81')
 
-
-#영화 정보 상세 검색 버튼
+# 영화 정보 상세 검색 버튼
 TempFont = font.Font(movie_information_frame, size=12, weight='bold', family='Malgun Gothic')
 MovieStorySearchButton = Button(movie_information_frame, font=TempFont, text="상세검색", command=SearchMovieInfo)
 MovieStorySearchButton.pack(side=LEFT)
 MovieStorySearchButton.place(x=120, y=500)
 
-#영화 검색 버튼
-movie_SearchButton = Button(movie_information_frame, font=TempFont, text="검색", command=search_movie, image=image[6],bg='#F6D8CE')
+# 영화 검색 버튼
+movie_SearchButton = Button(movie_information_frame, font=TempFont, text="검색", command=search_movie, image=image[6],
+                            bg='#F6D8CE')
 movie_SearchButton.pack()
 movie_SearchButton.place(x=650, y=3)
 
-#북마크  버튼
-MovieBookMarkButton = Button(movie_information_frame, image=image[8], command=bookmark ,bg='#F6D8CE')
+# 북마크  버튼
+MovieBookMarkButton = Button(movie_information_frame, image=image[8], command=bookmark, bg='#F6D8CE')
 MovieBookMarkButton.pack()
 MovieBookMarkButton.place(x=720, y=3)
 
-
-#영화 정보 포스터 박스
+# 영화 정보 포스터 박스
 movie_information_poster = Label(movie_information_frame, width=160, height=210, borderwidth=20, relief='ridge')
 movie_information_poster.place(x=310, y=110)
 ima = Image.open('resource/output/small_bookmark.png')
@@ -296,58 +313,53 @@ ima = ima.resize((160, 210))
 movie_information_poster.img = ImageTk.PhotoImage(ima)
 movie_information_poster['image'] = movie_information_poster.img
 
-
-#영화 평점 정보 출력 박스
+# 영화 평점 정보 출력 박스
 TempFont = font.Font(movie_information_frame, size=15, weight='bold', family='Malgun Gothic')
 movie_list_score_show_box = Text(movie_information_frame, width=18, height=7, borderwidth=20, relief='ridge',
-                              font=TempFont, bg='#F6D8CE')
+                                 font=TempFont, bg='#F6D8CE')
 movie_list_score_show_box.pack()
 movie_list_score_show_box.place(x=530, y=110)
 movie_list_score_show_box.configure(state='disabled')
 
-
-#영화 줄거리 정보 출력 박스
+# 영화 줄거리 정보 출력 박스
 TempFont = font.Font(movie_information_frame, size=11, weight='bold', family='Malgun Gothic')
-movie_list_story_show_box = Text(movie_information_frame, width=47, height=7, borderwidth=20, relief='ridge',
-                              font=TempFont, bg='#F6D8CE')
+movie_list_story_show_box = Text(movie_information_frame, width=48, height=7, borderwidth=20, relief='ridge',
+                                 font=TempFont, bg='#F6D8CE')
 movie_list_story_show_box.pack()
 movie_list_story_show_box.place(x=310, y=370)
 movie_list_story_show_box.configure(state='disabled')
-
 
 # 페이지 -영화관 지도 생성
 movie_map_frame = Frame(window)
 notebook.add(movie_map_frame, image=image[2])
 movie_map_frame.configure(bg='#F79F81')
-select_map_list =None
+select_map_list = None
+
 
 def showmap():
     global select_map_list
     num = map_list_box.curselection()
     i = int(num[0])
-    x =select_map_list['좌표정보(X)'].iloc[i]
-    y =select_map_list['좌표정보(Y)'].iloc[i]
-    Pressed(x,y)
-
-
+    x = select_map_list['좌표정보(X)'].iloc[i]
+    y = select_map_list['좌표정보(Y)'].iloc[i]
+    Pressed(x, y)
 
 
 def searchmap():
     global select_map_list
     m = map_InputLabel.get()
-    movie_map.filter(items=['번호', '소재지전체주소', '사업장명','좌표정보(X)', '좌표정보(Y)'])
-    contains_korea_or_japan = movie_map['소재지전체주소'].str.contains("%s"%m)
+    movie_map.filter(items=['번호', '소재지전체주소', '사업장명', '좌표정보(X)', '좌표정보(Y)'])
+    contains_korea_or_japan = movie_map['소재지전체주소'].str.contains("%s" % m)
     subset_df = movie_map[contains_korea_or_japan]
-    subset_df= subset_df.filter(items=['소재지전체주소', '사업장명','좌표정보(X)', '좌표정보(Y)'])
-    map_list_box.delete(0, map_list_box.size() )
-    select_map_list =subset_df
+    subset_df = subset_df.filter(items=['소재지전체주소', '사업장명', '좌표정보(X)', '좌표정보(Y)'])
+    map_list_box.delete(0, map_list_box.size())
+    select_map_list = subset_df
 
     for i in range(len(subset_df)):
-        map_list_box.insert(0,subset_df['사업장명'].iloc[i] +"-"+subset_df['소재지전체주소'].iloc[i])
+        map_list_box.insert(0, subset_df['사업장명'].iloc[i] + "-" + subset_df['소재지전체주소'].iloc[i])
 
 
-
-#맵 리스트 박스
+# 맵 리스트 박스
 TempFont = font.Font(movie_map_frame, size=10, weight='bold', family='Malgun Gothic')
 
 map_list_box = Listbox(movie_map_frame, font=TempFont, activestyle='none',
@@ -365,34 +377,106 @@ movie_ranking_Text.pack()
 movie_ranking_Text.place(x=10)
 movie_ranking_Text.configure(bg='#F79F81')
 
-#지역 입력받기
+# 지역 입력받기
 map_InputLabel = Entry(movie_map_frame, font=TempFont, width=20, borderwidth=10, relief='ridge')
 map_InputLabel.pack()
 map_InputLabel.place(x=280, y=0)
 map_InputLabel.configure(bg='#F79F81')
 
-#지역 검색 버튼
-map_SearchButton = Button(movie_map_frame, font=TempFont, text="검색", command=searchmap, image=image[6],bg='#F6D8CE')
+# 지역 검색 버튼
+map_SearchButton = Button(movie_map_frame, font=TempFont, text="검색", command=searchmap, image=image[6], bg='#F6D8CE')
 map_SearchButton.pack()
 map_SearchButton.place(x=650, y=3)
 
-#지도출력 버튼
-MovieStorySearchButton = Button(movie_map_frame, image=image[7], command=showmap ,bg='#F6D8CE')
+# 지도출력 버튼
+MovieStorySearchButton = Button(movie_map_frame, image=image[7], command=showmap, bg='#F6D8CE')
 MovieStorySearchButton.pack()
 MovieStorySearchButton.place(x=720, y=3)
-
-
 
 # 페이지 - 메일 & 텔레그램
 movie_mail_frame = Frame(window)
 notebook.add(movie_mail_frame, image=image[3])
 movie_mail_frame.configure(bg='#F79F81')
 
-label1 = Label(movie_mail_frame, text="메일 텔레그램", fg='red', font='helvetica 48')
-label1.pack()
+
+
+def InitInputGmail():
+    global address
+    address = StringVar()
+    TempFont = font.Font(movie_mail_frame, size=20, weight='bold', family='Malgun Gothic')
+    GmailLabel = Entry(movie_mail_frame, textvariable=address, font=TempFont, width=20, borderwidth=10, relief='ridge')
+    GmailLabel.pack()
+    GmailLabel.place(x=280, y=0)
+    GmailLabel.configure(bg='#F79F81')
+
+def SendMail():
+    global movie_ranking, address
+    address = str(address.get())
+    Gmail.SendMail(address, movie_ranking)
+
+InitInputGmail()
 
 
 
+# 폰트
+TempFont = font.Font(movie_mail_frame, size=20, weight='bold', family='Malgun Gothic')
+
+# 왼쪽의  영화관 찾기 글씨
+movie_ranking_Text = Label(movie_mail_frame, font=TempFont, text="북마크 \n 메일보내기")
+
+movie_ranking_Text.pack()
+movie_ranking_Text.place(x=10)
+movie_ranking_Text.configure(bg='#F79F81')
+
+def bookmark_show():
+    pass
+
+
+
+# 메일 보내기 버튼
+mail_send_button = Button(movie_mail_frame, font=TempFont, text="검색", command=SendMail, image=image[9], bg='#F6D8CE')
+mail_send_button.pack()
+mail_send_button.place(x=650, y=3)
+
+# 북마크 찾기 버튼
+bookmark_search_button= Button(movie_mail_frame, image=image[6], command=bookmark_show, bg='#F6D8CE')
+bookmark_search_button.pack()
+bookmark_search_button.place(x=110, y=500)
+
+
+# 북마크 리스트 박스
+TempFont = font.Font(movie_mail_frame, size=10, weight='bold', family='Malgun Gothic')
+
+bookmark_movie_list_box = Listbox(movie_mail_frame, font=TempFont, activestyle='none',
+                         width=30, height=18, borderwidth=20, relief='ridge')
+bookmark_movie_list_box.pack()
+bookmark_movie_list_box.place(x=10, y=120)
+bookmark_movie_list_box.configure(bg='#F6D8CE')
+
+
+
+# 북마크 영화 정보 포스터 박스
+bookmark_movie_information_poster = Label(movie_mail_frame, width=160, height=210, borderwidth=20, relief='ridge')
+bookmark_movie_information_poster.place(x=310, y=110)
+bookmark_ima = Image.open('resource/output/small_bookmark.png')
+bookmark_ima = bookmark_ima.resize((160, 210))
+bookmark_movie_information_poster.img = ImageTk.PhotoImage(ima)
+bookmark_movie_information_poster['image'] = movie_information_poster.img
+
+# 북마크 영화 평점 정보 출력 박스
+TempFont = font.Font(movie_information_frame, size=15, weight='bold', family='Malgun Gothic')
+bookmark_movie_list_score_show_box = Text(movie_mail_frame, width=18, height=7, borderwidth=20, relief='ridge',
+                                 font=TempFont, bg='#F6D8CE')
+bookmark_movie_list_score_show_box.pack()
+bookmark_movie_list_score_show_box.place(x=530, y=110)
+bookmark_movie_list_score_show_box.configure(state='disabled')
+
+# 북마크 영화 줄거리 정보 출력 박스
+TempFont = font.Font(movie_information_frame, size=11, weight='bold', family='Malgun Gothic')
+bookmark_movie_list_story_show_box = Text(movie_mail_frame, width=48, height=7, borderwidth=20, relief='ridge',
+                                 font=TempFont, bg='#F6D8CE')
+bookmark_movie_list_story_show_box.pack()
+bookmark_movie_list_story_show_box.place(x=310, y=370)
+bookmark_movie_list_story_show_box.configure(state='disabled')
 
 window.mainloop()
-
