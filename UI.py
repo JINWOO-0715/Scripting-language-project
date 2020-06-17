@@ -572,7 +572,7 @@ def handle_main(msg):
             a=[]
             for i in range(len(subset_df)):
                 a.append([subset_df['사업장명'].iloc[i], subset_df['소재지전체주소'].iloc[i]])
-            okheebot.sendMessage(chat_id, a)
+            okheebot.sendMessage(chat_id, '%s'%str(a))
         else:
             okheebot.sendMessage(chat_id, '잘못된 입력입니다. 랭킹 or 서울특별시 검색이름 을 입력하세요')
         #원하는 명령어 추가
