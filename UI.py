@@ -228,6 +228,12 @@ movie_InputLabel.pack()
 movie_InputLabel.place(x=280, y=0)
 movie_InputLabel.configure(bg='#F79F81')
 
+#영화 정보 상세 검색 버튼
+TempFont = font.Font(movie_information_frame, size=12, weight='bold', family='Malgun Gothic')
+MovieStorySearchButton = Button(movie_information_frame, font=TempFont, text="상세검색", command=SearchMovieStory)
+MovieStorySearchButton.pack(side=LEFT)
+MovieStorySearchButton.place(x=120, y=500)
+
 #영화 검색 버튼
 movie_SearchButton = Button(movie_information_frame, font=TempFont, text="검색", command=search_movie, image=image[6],bg='#F6D8CE')
 movie_SearchButton.pack()
@@ -239,7 +245,14 @@ MovieBookMarkButton.pack()
 MovieBookMarkButton.place(x=720, y=3)
 
 
+#영화 리스트 박스
+TempFont = font.Font(movie_information_frame, size=10, weight='bold', family='Malgun Gothic')
 
+movie_list_show_box = Listbox(movie_information_frame, font=TempFont, activestyle='none',
+                       width=35, height=18, borderwidth=20, relief='ridge')
+movie_list_show_box.pack()
+movie_list_show_box.place(x=450, y=120)
+movie_list_show_box.configure(bg='#F6D8CE')
 
 
 
@@ -255,11 +268,8 @@ def showmap():
     global select_map_list
     num = map_list_box.curselection()
     i = int(num[0])
-    if i%2!=0:
-        i+=1
     x =select_map_list['좌표정보(X)'].iloc[i]
     y =select_map_list['좌표정보(Y)'].iloc[i]
-    print(x,y)
     Pressed(x,y)
 
 
@@ -276,7 +286,7 @@ def searchmap():
     select_map_list =subset_df
 
     for i in range(len(subset_df)):
-        map_list_box.insert(0,subset_df['사업장명'].iloc[i] ,subset_df['소재지전체주소'].iloc[i])
+        map_list_box.insert(0,subset_df['사업장명'].iloc[i] +"-"+subset_df['소재지전체주소'].iloc[i])
 
 
 
@@ -284,7 +294,7 @@ def searchmap():
 TempFont = font.Font(movie_map_frame, size=10, weight='bold', family='Malgun Gothic')
 
 map_list_box = Listbox(movie_map_frame, font=TempFont, activestyle='none',
-                       width=50, height=18, borderwidth=20, relief='ridge')
+                       width=52, height=18, borderwidth=20, relief='ridge')
 map_list_box.pack()
 map_list_box.place(x=10, y=120)
 map_list_box.configure(bg='#F6D8CE')

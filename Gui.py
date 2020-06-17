@@ -15,7 +15,7 @@ from matplotlib import font_manager
 
 
 
-import tkinter.ttk #콤보박스 나중을 위함
+import tkinter.ttk
 
 
 DataList = []
