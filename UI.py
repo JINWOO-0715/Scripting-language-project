@@ -224,7 +224,10 @@ def bookmark():
     i = int(num[0])
     save_bookmark= save_bookmark.append(search_movie_list[i] ,ignore_index=True)
     save_bookmark.to_csv('sample.csv')
-    print(save_bookmark)
+    bookmark_movie_list_box.delete(0,bookmark_movie_list_box.size())
+    for i in range(len(save_bookmark)):
+        bookmark_movie_list_box.insert(0, save_bookmark.iloc[i]['title'])
+
 
 def SearchMovieInfo():
     global ima, movie_information_poster
@@ -321,6 +324,17 @@ movie_list_story_show_box.pack()
 movie_list_story_show_box.place(x=310, y=370)
 movie_list_story_show_box.configure(state='disabled')
 
+
+
+
+
+
+
+
+
+
+
+
 # 페이지 -영화관 지도 생성
 movie_map_frame = Frame(window)
 notebook.add(movie_map_frame, image=image[2])
@@ -408,12 +422,10 @@ def SendMail():
 
 InitInputGmail()
 
-
-
 # 폰트
 TempFont = font.Font(movie_mail_frame, size=20, weight='bold', family='Malgun Gothic')
 
-# 왼쪽의  영화관 찾기 글씨
+# 왼쪽의  북마크 글씨
 movie_ranking_Text = Label(movie_mail_frame, font=TempFont, text="북마크 \n 메일보내기")
 
 movie_ranking_Text.pack()
@@ -421,36 +433,36 @@ movie_ranking_Text.place(x=10)
 movie_ranking_Text.configure(bg='#F79F81')
 
 def bookmark_show():
-    global ima, movie_information_poster
-    num = movie_list_box.curselection()
+    global bookmark_ima , bookmark_movie_information_poster
+    num = bookmark_movie_list_box.curselection()
     i = int(num[0])
     bookmark_movie_list_score_show_box.configure(state='normal')
     bookmark_movie_list_score_show_box.delete('1.0', END)
-    bookmark_movie_list_score_show_box.insert(INSERT, save_bookmark[i]['title'])
+    bookmark_movie_list_score_show_box.insert(INSERT, save_bookmark.iloc[i]['title'])
     bookmark_movie_list_score_show_box.insert(INSERT, "\n")
     bookmark_movie_list_score_show_box.insert(INSERT, "개봉일: ")
-    bookmark_movie_list_score_show_box.insert(INSERT, save_bookmark[i]['개봉일'])
+    bookmark_movie_list_score_show_box.insert(INSERT, save_bookmark.iloc[i]['개봉일'])
     bookmark_movie_list_score_show_box.insert(INSERT, " ")
     bookmark_movie_list_score_show_box.insert(INSERT, "\n")
     bookmark_movie_list_score_show_box.insert(INSERT, "배우: ")
-    bookmark_movie_list_score_show_box.insert(INSERT, save_bookmark[i]['배우'])
+    bookmark_movie_list_score_show_box.insert(INSERT, save_bookmark.iloc[i]['배우'])
     bookmark_movie_list_score_show_box.insert(INSERT, "\n")
     bookmark_movie_list_score_show_box.insert(INSERT, "유저평점: ")
-    bookmark_movie_list_score_show_box.insert(INSERT, save_bookmark[i]['유저평점'])
+    bookmark_movie_list_score_show_box.insert(INSERT, save_bookmark.iloc[i]['유저평점'])
     bookmark_movie_list_score_show_box.insert(INSERT, "\n")
     bookmark_movie_list_score_show_box.insert(INSERT, "기자 평론가 평점: ")
-    bookmark_movie_list_score_show_box.insert(INSERT, save_bookmark[i]['기자평점'])
+    bookmark_movie_list_score_show_box.insert(INSERT, save_bookmark.iloc[i]['기자평점'])
 
     bookmark_movie_list_story_show_box.configure(state='normal')
     bookmark_movie_list_story_show_box.delete('1.0', END)
-    bookmark_movie_list_story_show_box.insert(INSERT, "줄거리 : %s \n" % save_bookmark[i]['줄거리'])
+    bookmark_movie_list_story_show_box.insert(INSERT, "줄거리 : %s \n" % save_bookmark.iloc[i]['줄거리'])
     bookmark_movie_list_story_show_box.insert(INSERT, "\n")
-    bookmark_movie_list_story_show_box.insert(INSERT, "네이버 링크 : %s" % save_bookmark[i]['링크'])
+    bookmark_movie_list_story_show_box.insert(INSERT, "네이버 링크 : %s" % save_bookmark.iloc[i]['링크'])
 
-    ima = Image.open('%s.jpg' % save_bookmark[i]['title'])
-    ima = ima.resize((160, 210))
-    bookmark_movie_information_poster.img = ImageTk.PhotoImage(ima)
-    bookmark_movie_information_poster['image'] = movie_information_poster.img
+    bookmark_ima = Image.open('%s.jpg' % save_bookmark.iloc[i]['title'])
+    bookmark_ima = bookmark_ima.resize((160, 210))
+    bookmark_movie_information_poster.img = ImageTk.PhotoImage(bookmark_ima)
+    bookmark_movie_information_poster['image'] = bookmark_movie_information_poster.img
 
 
 
@@ -475,6 +487,8 @@ bookmark_movie_list_box.pack()
 bookmark_movie_list_box.place(x=10, y=120)
 bookmark_movie_list_box.configure(bg='#F6D8CE')
 
+for i in range(len(save_bookmark)):
+    bookmark_movie_list_box.insert(0, save_bookmark.iloc[i]['title'])
 
 
 # 북마크 영화 정보 포스터 박스
@@ -482,8 +496,9 @@ bookmark_movie_information_poster = Label(movie_mail_frame, width=160, height=21
 bookmark_movie_information_poster.place(x=310, y=110)
 bookmark_ima = Image.open('resource/output/small_bookmark.png')
 bookmark_ima = bookmark_ima.resize((160, 210))
-bookmark_movie_information_poster.img = ImageTk.PhotoImage(ima)
+bookmark_movie_information_poster.img = ImageTk.PhotoImage(bookmark_ima)
 bookmark_movie_information_poster['image'] = movie_information_poster.img
+
 
 # 북마크 영화 평점 정보 출력 박스
 TempFont = font.Font(movie_information_frame, size=15, weight='bold', family='Malgun Gothic')
@@ -492,6 +507,7 @@ bookmark_movie_list_score_show_box = Text(movie_mail_frame, width=18, height=7, 
 bookmark_movie_list_score_show_box.pack()
 bookmark_movie_list_score_show_box.place(x=530, y=110)
 bookmark_movie_list_score_show_box.configure(state='disabled')
+
 
 # 북마크 영화 줄거리 정보 출력 박스
 TempFont = font.Font(movie_information_frame, size=11, weight='bold', family='Malgun Gothic')
