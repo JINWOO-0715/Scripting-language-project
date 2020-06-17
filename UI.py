@@ -565,10 +565,16 @@ def handle_main(msg):
         elif msg['text'] == '랭킹':
             for i in range(10):
                 okheebot.sendMessage(chat_id, '['+str(i)+']위'+'%s \n 개봉일 : %s \n 누적 관람객 : %s \n 당일 관람객:%s \n'%(movie_ranking[i]['movieNm'] ,str(movie_ranking[i]['movieCd']) ,str(movie_ranking[i]['audiAcc']),str(movie_ranking[i]['audiCnt'])))
-        elif msg['text'] == '서울':
-            okheebot.sendMessage(chat_id, '정지')
+        elif '서울특별시' in msg['text']:
+            contain =movie_map['소재지전체주소'].str.contains("%s" %msg['text'])
+            subset_df = movie_map[contain]
+            subset_df = subset_df.filter(items=['소재지전체주소','사업장명'])
+            a=[]
+            for i in range(len(subset_df)):
+                a.append([subset_df['사업장명'].iloc[i], subset_df['소재지전체주소'].iloc[i]])
+            okheebot.sendMessage(chat_id, a)
         else:
-            okheebot.sendMessage(chat_id, '이건날짜')
+            okheebot.sendMessage(chat_id, '잘못된 입력입니다. 랭킹 or 서울특별시 검색이름 을 입력하세요')
         #원하는 명령어 추가
 
 
