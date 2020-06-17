@@ -546,5 +546,43 @@ bookmark_movie_list_story_show_box = Text(movie_mail_frame, width=48, height=7, 
 bookmark_movie_list_story_show_box.pack()
 bookmark_movie_list_story_show_box.place(x=310, y=370)
 bookmark_movie_list_story_show_box.configure(state='disabled')
+import telepot
+from telepot.loop import MessageLoop
+import time
+
+TOKEN_MAIN = '1234921010:AAGZPRWz25Rc0ziQt9_PKCEIjGBicWMxkVw'#위에서 발급받은 토큰 기입
+
+StartMsg = "명령어 \n" \
+          "1.안녕 : hi \n" \
+          "2.정지 : stop"
+
+def handle_main(msg):
+    msg_type, chat_type, chat_id, msg_data, msg_id = telepot.glance(msg, long=True)
+    print(msg)
+    if msg_type == 'text':
+        if msg['text'] == '/'+'start':
+            okheebot.sendMessage(chat_id, StartMsg)
+        elif msg['text'] == '랭킹':
+            for i in range(10):
+                okheebot.sendMessage(chat_id, '['+str(i)+']위'+'%s \n 개봉일 : %s \n 누적 관람객 : %s \n 당일 관람객:%s \n'%(movie_ranking[i]['movieNm'] ,str(movie_ranking[i]['movieCd']) ,str(movie_ranking[i]['audiAcc']),str(movie_ranking[i]['audiCnt'])))
+        elif msg['text'] == '서울':
+            okheebot.sendMessage(chat_id, '정지')
+        else:
+            okheebot.sendMessage(chat_id, '이건날짜')
+        #원하는 명령어 추가
+
+
+okheebot = telepot.Bot(TOKEN_MAIN)
+MessageLoop(okheebot, handle_main).run_as_thread()
+
+
 
 window.mainloop()
+
+
+
+
+
+
+
+
