@@ -5,7 +5,7 @@ from urllib.parse import quote
 import json
 import re
 import requests
-
+from _tkinter import *
 
 # 네이버 검색 Open API 사용 요청시 얻게되는 정보를 입력합니다
 naver_client_id = "mHqayEjLQi3Y5vpMchIt"
@@ -72,13 +72,13 @@ def findItemByInput(items ):
 
 
 
-        # # 영화의 타이틀 이미지를 표시합니다
+        # # # 영화의 타이틀 이미지를 표시합니다
         # if (item['image'] != None and "http" in item['image']):
         #    response = requests.get(item['image'])
         #    img = Image.open(BytesIO(response.content))
         #    img.show()
 
-        return spMStory , naveruserScore,spScore
+        # return spMStory , naveruserScore,spScore
 
 def findItemByInput2(items ):
     for index, item in enumerate(items):

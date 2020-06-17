@@ -8,7 +8,7 @@ import pandas
 import matplotlib.pyplot as plt
 import numpy
 from Map import *
-
+from PIL import Image, ImageTk
 
 def callback(event):
     print("clicked at", event.x, event.y)
@@ -32,6 +32,8 @@ image.append(PhotoImage(file='resource/output/graph.png'))  # 5
 image.append(PhotoImage(file='resource/output/small_search.png'))  # 6
 image.append(PhotoImage(file='resource/output/small_map.png'))  # 7
 image.append(PhotoImage(file='resource/output/small_bookmark.png'))  # 8
+im = Image.open('위대한 쇼맨.gif')
+
 movie_ranking = Movie().crawl_movie()
 movie_map = Seoul().crawl_movie()
 
@@ -123,8 +125,11 @@ MovieStorySearchButton.pack(side=LEFT)
 MovieStorySearchButton.place(x=120, y=410)
 
 # 영화 포스터 라벨 아직 안됨  파일 인식 불가
-movie_poster = Label(movie_ranking_frame, width=200, height=200, borderwidth=20, image=image[4], relief='ridge',
+movie_poster = Label(movie_ranking_frame, width=200, height=200, borderwidth=20,  relief='ridge',
                      font=TempFont)
+im = im.resize((150,200))
+movie_poster.img = ImageTk.PhotoImage(im)
+movie_poster['image'] = movie_poster.img
 movie_poster.pack()
 movie_poster.place(x=250, y=140)
 label1.configure(bg='#F6D8CE')
@@ -179,9 +184,6 @@ MovieStorySearchButton.place(x=720, y=3)
 
 
 
-
-
-
 # 페이지-영화 상세 정보 생성
 movie_information_frame = Frame(window)
 notebook.add(movie_information_frame, text="페이지2", image=image[1])
@@ -195,16 +197,44 @@ label1.pack()
 
 # 폰트
 TempFont = font.Font(movie_information_frame, size=20, weight='bold', family='Malgun Gothic')
+search_movie_list=[]
 
 def search_movie():
-    global movie_Text
-    a=getData2(movie_InputLabel.get())
-    for i in range (len(a)):
-        print(a[i]['title'])
-        movie_list_box.insert(5,a[i]['title'])
+    global movie_Text,search_movie_list
+    search_movie_list.clear()
+    search_movie_list=getData2(movie_InputLabel.get())
+    movie_list_box.delete(0, movie_list_box.size())
+    for i in range (len(search_movie_list)):
+        movie_list_box.insert(5,search_movie_list[i]['title'])
+
 
 def bookmark():
     pass
+
+def SearchMovieInfo():
+    num = movie_list_box.curselection()
+    i = int(num[0])
+    print(search_movie_list[i])
+    movie_list_show_box.configure(state='normal')
+    movie_list_show_box.delete('1.0', END)
+    movie_list_show_box.insert(INSERT, search_movie_list[i]['title'])
+    movie_list_show_box.insert(INSERT, "\n")
+    movie_list_show_box.insert(INSERT, "개봉일: ")
+    movie_list_show_box.insert(INSERT, search_movie_list[i]['개봉일'])
+    movie_list_show_box.insert(INSERT, " ")
+    movie_list_show_box.insert(INSERT, "\n")
+    movie_list_show_box.insert(INSERT, "배우: ")
+    movie_list_show_box.insert(INSERT, search_movie_list[i]['배우'])
+    movie_list_show_box.insert(INSERT, "\n")
+    movie_list_show_box.insert(INSERT, "유저평점: ")
+    movie_list_show_box.insert(INSERT, search_movie_list[i]['유저평점'])
+    movie_list_show_box.insert(INSERT, "\n")
+    movie_list_show_box.insert(INSERT, "기자 평론가 평점: ")
+    movie_list_show_box.insert(INSERT, search_movie_list[i]['기자평점'])
+    movie_list_show_box.insert(INSERT, "\n")
+    movie_list_show_box.insert(INSERT, "줄거리 : %s" % search_movie_list[i]['줄거리'])
+
+
 
 # 왼쪽의  영화관 찾기 글씨
 movie_Text = Label(movie_information_frame, font=TempFont, text="[영화 찾기]")
@@ -228,9 +258,12 @@ movie_InputLabel.pack()
 movie_InputLabel.place(x=280, y=0)
 movie_InputLabel.configure(bg='#F79F81')
 
+
+
+
 #영화 정보 상세 검색 버튼
 TempFont = font.Font(movie_information_frame, size=12, weight='bold', family='Malgun Gothic')
-MovieStorySearchButton = Button(movie_information_frame, font=TempFont, text="상세검색", command=SearchMovieStory)
+MovieStorySearchButton = Button(movie_information_frame, font=TempFont, text="상세검색", command=SearchMovieInfo)
 MovieStorySearchButton.pack(side=LEFT)
 MovieStorySearchButton.place(x=120, y=500)
 
@@ -245,16 +278,16 @@ MovieBookMarkButton.pack()
 MovieBookMarkButton.place(x=720, y=3)
 
 
-#영화 리스트 박스
+#영화 정보 출력 박스
 TempFont = font.Font(movie_information_frame, size=10, weight='bold', family='Malgun Gothic')
-
-movie_list_show_box = Listbox(movie_information_frame, font=TempFont, activestyle='none',
-                       width=35, height=18, borderwidth=20, relief='ridge')
+movie_list_show_box = Text(movie_information_frame, width=36, height=19, borderwidth=20, relief='ridge',
+                              font=TempFont, bg='#F6D8CE')
 movie_list_show_box.pack()
-movie_list_show_box.place(x=450, y=120)
-movie_list_show_box.configure(bg='#F6D8CE')
+movie_list_show_box.place(x=440, y=120)
+movie_list_show_box.configure(state='disabled')
 
 
+TempFont = font.Font(movie_list_show_box, size=10, weight='bold', family='Malgun Gothic')
 
 
 
