@@ -35,6 +35,8 @@ image.append(PhotoImage(file='resource/output/small_search.png'))  # 6
 image.append(PhotoImage(file='resource/output/small_map.png'))  # 7
 image.append(PhotoImage(file='resource/output/small_bookmark.png'))  # 8
 image.append(PhotoImage(file='resource/output/small_gmail.png'))  # 9
+image.append(PhotoImage(file='resource/output/remove_icon.png'))  # 10
+
 
 movie_ranking = Movie().crawl_movie()
 movie_map = Seoul().crawl_movie()
@@ -475,7 +477,12 @@ mail_send_button.place(x=650, y=3)
 # 북마크 찾기 버튼
 bookmark_search_button= Button(movie_mail_frame, image=image[6], command=bookmark_show, bg='#F6D8CE')
 bookmark_search_button.pack()
-bookmark_search_button.place(x=110, y=500)
+bookmark_search_button.place(x=80, y=500)
+
+# 북마크 제거 버튼
+bookmark_remove_button= Button(movie_mail_frame, image=image[10], command=bookmark_show, bg='#F6D8CE')
+bookmark_remove_button.pack()
+bookmark_remove_button.place(x=200, y=500)
 
 
 # 북마크 리스트 박스
