@@ -190,16 +190,6 @@ MovieStorySearchButton.pack()
 MovieStorySearchButton.place(x=720, y=3)
 
 
-
-
-
-
-
-
-
-
-
-
 # 페이지-영화 상세 정보 생성
 movie_information_frame = Frame(window)
 notebook.add(movie_information_frame, text="페이지2", image=image[1])
@@ -328,16 +318,6 @@ movie_list_story_show_box.place(x=310, y=370)
 movie_list_story_show_box.configure(state='disabled')
 
 
-
-
-
-
-
-
-
-
-
-
 # 페이지 -영화관 지도 생성
 movie_map_frame = Frame(window)
 notebook.add(movie_map_frame, image=image[2])
@@ -439,7 +419,7 @@ InitInputGmail()
 TempFont = font.Font(movie_mail_frame, size=20, weight='bold', family='Malgun Gothic')
 
 # 왼쪽의  북마크 글씨
-movie_ranking_Text = Label(movie_mail_frame, font=TempFont, text="북마크 \n 메일보내기")
+movie_ranking_Text = Label(movie_mail_frame, font=TempFont, text="  박스오피스 \n 메일보내기")
 
 movie_ranking_Text.pack()
 movie_ranking_Text.place(x=10)

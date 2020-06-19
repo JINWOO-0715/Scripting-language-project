@@ -75,6 +75,7 @@ def SendMail(address, movie_ranking):
     msgtext = "서울시 영화 정보"  # 안내 메세지 고정
     passwd = "jgh7339**!"  # 발신 아이디 비밀번호 고정
 
+    
     for i in range(10):
         html += '['+str(i+1)+'] '+movie_ranking[i]['movieNm']+"<br>"
         html += "개봉일: " +movie_ranking[i]['openDt']+"<br>"
